@@ -1,0 +1,4 @@
+*.pfx
+*bin/
+*obj/
+.appxmanifest
