@@ -66,6 +66,10 @@
     <Reference Include="BEPUphysics">
       <HintPath>BEPU\BEPUphysics.dll</HintPath>
     </Reference>
+    <Reference Include="DPSF, Version=2.2.2.0, Culture=neutral, PublicKeyToken=32c832bfa7326ee2, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>AD_Core\DPSF.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -78,9 +82,18 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Actor.cs" />
+    <Compile Include="BillboardDrawingObject.cs" />
+    <Compile Include="CharacterCamera.cs" />
+    <Compile Include="IDrawableObject.cs" />
+    <Compile Include="Loader.cs" />
+    <Compile Include="LoadingScreen.cs" />
+    <Compile Include="ModelDrawingObject.cs" />
+    <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="BaseGame.cs" />
+    <Compile Include="SubtitleBox.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Game.ico" />

@@ -17,12 +17,14 @@ namespace LD28
     /// </summary>
     public class BaseGame : Game
     {
-        GraphicsDeviceManager graphics;
+        public GraphicsDeviceManager Graphics;
+        private LoadingScreen loadingScreen;
+        public Loader Loader;
         SpriteBatch spriteBatch;
 
         public BaseGame()
         {
-            graphics = new GraphicsDeviceManager(this);
+            Graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
         }
 
@@ -48,7 +50,7 @@ namespace LD28
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            RenderingDevice.Initialize(graphics, new BoxCutter(true, false, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LD28\\"), new BEPUphysics.Space(), null, null);
+            //RenderingDevice.Initialize(graphics, new BoxCutter(true, false, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LD28\\"), new BEPUphysics.Space(), null);
         }
 
         /// <summary>
