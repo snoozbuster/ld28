@@ -8,18 +8,19 @@ using Microsoft.Xna.Framework.GamerServices;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
+using Accelerated_Delivery_Win;
 
 namespace LD28
 {
     /// <summary>
     /// This is the main type for your game
     /// </summary>
-    public class Game1 : Microsoft.Xna.Framework.Game
+    public class BaseGame : Game
     {
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
-        public Game1()
+        public BaseGame()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
@@ -47,7 +48,7 @@ namespace LD28
             // Create a new SpriteBatch, which can be used to draw textures.
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            // TODO: use this.Content to load your game content here
+            RenderingDevice.Initialize(graphics, new BoxCutter(true, false, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LD28\\"), new BEPUphysics.Space(), null, null);
         }
 
         /// <summary>
