@@ -17,7 +17,6 @@ namespace LD28
         private static readonly Rectangle edgeDrawZone;
         private static readonly Color internalColor;
         private static readonly Color edgeColor;
-
         private static readonly Queue<TextBoxData> messageQueue = new Queue<TextBoxData>();
 
         private static string currentText;
@@ -46,7 +45,7 @@ namespace LD28
                 messageQueue.Enqueue(new TextBoxData(name, str));
         }
 
-        public void Draw()
+        public static void Draw()
         {
             if(IsShowing)
             {
@@ -58,7 +57,7 @@ namespace LD28
             }
         }
 
-        public void Update()
+        public static void Update()
         {
             if(!IsShowing && messageQueue.Count > 0)
             {
