@@ -31,7 +31,10 @@ namespace LD28
             Inactive = true;
             Player player = killer as Player;
             if(player != null)
+            {
                 player.TakeMorality(MathHelper.Clamp((float)random.NextDouble(), 0.1f, 0.5f));
+                player.GiveExperience(MathHelper.Clamp((float)random.NextDouble() * random.Next(1, 4), 0.5f, 2.5f));
+            }
         }
 
         public override void Update(GameTime gameTime)

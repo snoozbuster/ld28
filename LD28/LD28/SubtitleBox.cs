@@ -21,6 +21,8 @@ namespace LD28
 
         private static string currentText;
 
+        private static readonly Vector2 symbolPos;
+
         static SubtitleBox()
         {
             Rectangle internalRect = new Rectangle((int)(RenderingDevice.GraphicsDevice.Viewport.Width * 0.05f),
@@ -37,6 +39,8 @@ namespace LD28
 
             internalColor = new Color(173, 216, 230, 220) * ((float)220 / 255);
             edgeColor = new Color(95, 158, 160, 220) * ((float)220 / 255);
+
+            symbolPos = new Vector2(internalDrawZone.X + internalDrawZone.Width - 40, internalDrawZone.Y + internalDrawZone.Height - 40);
         }
 
         public static void AddMessage(string text, string name = null)
@@ -57,6 +61,10 @@ namespace LD28
                 RenderingDevice.SpriteBatch.Draw(Program.Game.Loader.EmptyTex, edgeDrawZone, edgeColor);
                 RenderingDevice.SpriteBatch.Draw(Program.Game.Loader.EmptyTex, internalDrawZone, internalColor);
                 internalBox.Draw(currentText);
+                if(Input.ControlScheme == ControlScheme.Keyboard)
+                    SymbolWriter.WriteKeyboardIcon(Keys.Enter, symbolPos, true);
+                if(Input.ControlScheme == ControlScheme.XboxController)
+                    SymbolWriter.WriteXboxIcon(Buttons.X, symbolPos, true);
                 RenderingDevice.SpriteBatch.End();
             }
         }

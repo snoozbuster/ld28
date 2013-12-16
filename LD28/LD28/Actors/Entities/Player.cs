@@ -14,8 +14,10 @@ namespace LD28
     public class Player : Actor
     {
         protected CharacterControllerInput character;
+        protected Dictionary<Actor, Dictionary<string, object>> progressionData = new Dictionary<Actor, Dictionary<string, object>>();
 
         public float Morality { get; private set; }
+        protected float experience = 0;
 
         public Player()
             : base(null, null, 100)
@@ -53,6 +55,26 @@ namespace LD28
                 
                 // todo: sword swinging
             }
+        }
+
+        public void UpdateProgressionData(Actor boundActor, string dataName, object value)
+        {
+            if(!progressionData.ContainsKey(boundActor))
+                progressionData.Add(boundActor, new Dictionary<string, object>());
+            progressionData[boundActor].Add(dataName, value);
+        }
+
+        public object GetProgressionData(Actor boundActor, string dataName)
+        {
+            if(!progressionData.ContainsKey(boundActor) || !progressionData[boundActor].ContainsKey(dataName))
+                return null;
+
+            return progressionData[boundActor][dataName];
+        }
+
+        public void GiveExperience(float experience)
+        {
+            this.experience += experience;
         }
 
         Func<BroadPhaseEntry, bool> rayCastFilter;

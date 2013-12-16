@@ -28,6 +28,8 @@ namespace LD28
         public bool Loading { get; private set; }
 
         private bool locked = false;
+        private bool beenDrawn = false;
+        private Texture2D loadingSplash;
 
         public BaseGame()
         {
@@ -47,7 +49,15 @@ namespace LD28
             Loading = true;
             Microsoft.Win32.SystemEvents.SessionSwitch += new Microsoft.Win32.SessionSwitchEventHandler(SystemEvents_SessionSwitch);
 
+            Graphics.PreferredBackBufferHeight = 720;
+            Graphics.PreferredBackBufferWidth = 1280;
+            Graphics.ApplyChanges();
+
+            Input.SetOptions(new WindowsOptions(), new XboxOptions());
+
             base.Initialize();
+
+            Resources.Initialize(Content);
         }
 
         /// <summary>
@@ -61,6 +71,7 @@ namespace LD28
 
             RenderingDevice.Initialize(Graphics, Program.Cutter, GameManager.Space, Content.Load<Effect>("shaders/shadowmap"));
             loadingScreen = new LoadingScreen(Content, GraphicsDevice);
+            loadingSplash = Content.Load<Texture2D>("textures/loading");
         }
 
         /// <summary>
@@ -83,7 +94,9 @@ namespace LD28
                 return;
             }
 
+            IsMouseVisible = true;
             Input.Update(gameTime, false);
+            MediaSystem.Update(gameTime, Program.Game.IsActive);
 
             if(Loading)
             {
@@ -97,15 +110,32 @@ namespace LD28
                 }
             }
             else
-                MenuHandler.Update(gameTime);
-
-            if(GameManager.State == GameState.Running)
             {
-                GameManager.Space.Update((float)(gameTime.ElapsedGameTime.TotalSeconds));
-                RenderingDevice.Update(gameTime);
-                // update all the actors
-                if(IsActive)
-                    Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+                GameState statePrior = GameManager.State;
+                MenuHandler.Update(gameTime);
+                bool stateChanged = GameManager.State != statePrior;
+                
+                if(GameManager.State == GameState.Running)
+                {
+                    if((Input.CheckKeyboardJustPressed(Keys.Escape) ||
+                        Input.CheckXboxJustPressed(Buttons.Start)) && !stateChanged)
+                    {
+                        //MediaSystem.PlaySoundEffect(SFXOptions.Pause);
+                        GameManager.State = GameState.Paused;
+                    }
+                    else
+                    {
+                        GameManager.Space.Update((float)(gameTime.ElapsedGameTime.TotalSeconds));
+                        RenderingDevice.Update(gameTime);
+                        // update all the actors
+                        SubtitleBox.Update();
+                        if(IsActive)
+                        {
+                            IsMouseVisible = false;
+                            Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+                        }
+                    }
+                }
             }
 
             base.Update(gameTime);
@@ -117,11 +147,19 @@ namespace LD28
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Draw(GameTime gameTime)
         {
-            GraphicsDevice.Clear(Color.CornflowerBlue);
+            if(!beenDrawn)
+            {
+                MediaSystem.LoadSoundEffects(Content);
+                beenDrawn = true;
+            }
+
+            GraphicsDevice.Clear(Color.Black);
 
             if(Loading)
             {
-                // draw background here
+                RenderingDevice.SpriteBatch.Begin();
+                RenderingDevice.SpriteBatch.Draw(loadingSplash, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.5f), Color.White);
+                RenderingDevice.SpriteBatch.End();
                 loadingScreen.Draw();
             }
             else
@@ -137,6 +175,7 @@ namespace LD28
         {
             RenderingDevice.Draw();
             // draw everything else in some actor list somewhere
+            SubtitleBox.Draw();
         }
 
 

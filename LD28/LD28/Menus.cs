@@ -40,12 +40,12 @@ namespace LD28
             loader = l;
             pauseMenu = new PauseMenu();
             mainMenu = new MainMenu();
-            gameOverMenu = new EndingMenu(loader.death_end);
+            //gameOverMenu = new EndingMenu(loader.death_end);
             disconnectMenu = new GamePadDCMenu();
             exitMenu = new ExitMenu();
             queryMenu = new GamePadQueryMenu();
-            endingMenu = new EndingMenu(loader.good_end);
-            badEndingMenu = new EndingMenu(loader.bad_end);
+            //endingMenu = new EndingMenu(loader.good_end);
+            //badEndingMenu = new EndingMenu(loader.bad_end);
         }
 
         public static void Draw(GameTime gameTime)
@@ -92,6 +92,8 @@ namespace LD28
                     }
                     queryMenu.Draw(gameTime);
                     break;
+                case GameState.Menuing_Lev: badEndingMenu.Draw(gameTime);
+                    break;
                 default: return;
             }
         }
@@ -120,8 +122,12 @@ namespace LD28
                 case GameState.Paused_PadQuery:
                     queryMenu.Update(gameTime);
                     break;
-                case GameState.Ending: endingMenu.Update(gameTime);
+                case GameState.Ending: 
+                    endingMenu.Update(gameTime);
                     return;
+                case GameState.Menuing_Lev: 
+                    badEndingMenu.Update(gameTime);
+                    break;
             }
         }
 
@@ -509,7 +515,7 @@ namespace LD28
                 selectedControl.IsSelected = null;
 
                 menu = new ConfirmationMenu("Are you sure you want to return to the main menu?\n                    All progress will be lost.",
-                    delegate { GameManager.CurrentLevel.RemoveFromGame(GameManager.Space); GameManager.LevelNumber = -1; MediaSystem.PlayTrack(SongOptions.Menu); if(GameManager.LevelEnteredFrom == GameState.Menuing_Lev) GameManager.State = GameState.Menuing_Lev; else GameManager.State = GameState.MainMenu; });
+                    delegate { MediaSystem.PlayTrack(SongOptions.Menu); GameManager.State = GameState.MainMenu; });
             }
 
             public override void Draw(GameTime gameTime)
@@ -522,13 +528,13 @@ namespace LD28
                 RenderingDevice.SpriteBatch.Draw(loader.mainMenuLogo, new Vector2(RenderingDevice.Width * 0.97f - loader.mainMenuLogo.Width / 2, RenderingDevice.Height * 0.03f - loader.mainMenuLogo.Height / 2), null, Color.White, 0.0f, new Vector2(loader.mainMenuLogo.Width / 2, loader.mainMenuLogo.Height / 2), 0.3f * RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
                 RenderingDevice.SpriteBatch.DrawString(loader.BiggerFont, "Paused", new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.3f), Color.OrangeRed, 0, loader.BiggerFont.MeasureString("Paused") * 0.5f, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
                 
-                Vector2 stringLength = loader.BiggerFont.MeasureString("Press       to resume");
+                Vector2 stringLength = loader.BiggerFont.MeasureString("Press          to resume");
                 Vector2 screenSpot = new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.5f);
-                RenderingDevice.SpriteBatch.DrawString(loader.BiggerFont, "Press       to resume", screenSpot, Color.White, 0, stringLength * 0.5f, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
+                RenderingDevice.SpriteBatch.DrawString(loader.BiggerFont, "Press          to resume", screenSpot, Color.White, 0, stringLength * 0.5f, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
                 if(Input.ControlScheme == ControlScheme.Keyboard)
-                    SymbolWriter.WriteKeyboardIcon(Keys.Escape, screenSpot, new Vector2((stringLength.X * 0.5f + SymbolWriter.IconCenter.X * 0.5f - loader.BiggerFont.MeasureString("Press ").X), SymbolWriter.IconCenter.Y), false);
+                    SymbolWriter.WriteKeyboardIcon(Keys.Escape, screenSpot, new Vector2((stringLength.X * 0.5f + SymbolWriter.IconCenter.X * 0.5f * 0.444f - loader.BiggerFont.MeasureString("Pr").X), SymbolWriter.IconCenter.Y + 10), true);
                 else
-                    SymbolWriter.WriteXboxIcon(Buttons.Start, screenSpot, new Vector2((stringLength.X * 0.5f + SymbolWriter.IconCenter.X * 0.5f - loader.BiggerFont.MeasureString("Press ").X), SymbolWriter.IconCenter.Y), false);
+                    SymbolWriter.WriteXboxIcon(Buttons.Start, screenSpot, new Vector2((stringLength.X * 0.5f + SymbolWriter.IconCenter.X * 0.5f * 0.444f - loader.BiggerFont.MeasureString("Pr").X), SymbolWriter.IconCenter.Y + 10), true);
 
                 base.Draw(gameTime);
 
@@ -580,14 +586,16 @@ namespace LD28
             public MainMenu()
             {
                 MenuButton quit;
-                start = new MenuButton(loader.startButton, delegate { if(MediaSystem.PlayingVoiceActing) return; GameManager.LevelNumber = 1; timerInMilliseconds = 0; GameManager.LevelEnteredFrom = GameState.Running; });
-                instructions = new MenuButton(loader.instructionsButton, delegate { GameManager.LevelNumber = 0; GameManager.LevelEnteredFrom = GameState.MainMenu; });
+                start = new MenuButton(loader.startButton, delegate { GameManager.State = GameState.Running; timerInMilliseconds = 0; });
+                instructions = new MenuButton(loader.instructionsButton, delegate { /* todo: instructions */ });
                 quit = new MenuButton(loader.quitButton, delegate { GameManager.State = GameState.Exiting; });
 
                 start.SetDirectionals(null, instructions, null, null);
                 instructions.SetDirectionals(start, quit, null, null);
                 quit.SetDirectionals(instructions, null, null, null);
                 controlArray.AddRange(new MenuControl[] { instructions, start, quit });
+
+                selectedControl = start;
             }
 
             public override void Draw(GameTime gameTime)
@@ -634,7 +642,7 @@ namespace LD28
                         Input.PlayerSelect(Program.Game.IsActive);
                         if(Input.MessagePad != null)
                         {
-                            MediaSystem.PlaySoundEffect(SFXOptions.Box_Success);
+                           MediaSystem.PlaySoundEffect(SFXOptions.Box_Success);
                             MouseTempDisabled = true;
                             startBeenPressed = true;
                             timer = 1200;

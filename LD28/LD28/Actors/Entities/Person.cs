@@ -36,7 +36,7 @@ namespace LD28
 
         protected override void onKeypress(KeypressEventArgs eventArgs)
         {
-            if(canTalk && eventArgs.Keypress == Keys.Enter && eventArgs.Distance < talkDistance && text != null)
+            if(canTalk && (eventArgs.Keypress == Keys.Enter || eventArgs.Gamepad.IsButtonDown(Buttons.X)) && eventArgs.Distance < talkDistance && text != null)
                 SubtitleBox.AddMessage(text, name);
             canTalk = false;
         }
