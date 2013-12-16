@@ -14,7 +14,7 @@ namespace LD28
 
         public Nature(Vector3 position, Texture2D image, float health, bool moralityDecrease = true)
             :base(new Box(position, image.Width, image.Height, image.Width),
-                   new BillboardDrawingObject(position, image, delegate { return Program.Game.Loader.BillboardEffect; }), health)
+                  new BillboardDrawingObject(position, image, delegate { return Program.Game.Loader.BillboardEffect; }), health)
         {
             this.moralityDecrease = moralityDecrease;
         }

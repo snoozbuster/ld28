@@ -31,6 +31,8 @@ namespace LD28
         private bool beenDrawn = false;
         private Texture2D loadingSplash;
 
+        private List<Actor> actorList = new List<Actor>();
+
         public BaseGame()
         {
             Graphics = new GraphicsDeviceManager(this);
@@ -51,6 +53,8 @@ namespace LD28
 
             Graphics.PreferredBackBufferHeight = 720;
             Graphics.PreferredBackBufferWidth = 1280;
+            if(Graphics.GraphicsDevice.Adapter.IsProfileSupported(GraphicsProfile.HiDef))
+                Graphics.GraphicsProfile = GraphicsProfile.HiDef;          
             Graphics.ApplyChanges();
 
             Input.SetOptions(new WindowsOptions(), new XboxOptions());
@@ -107,6 +111,7 @@ namespace LD28
                     loadingScreen = null;
                     Loading = false;
                     MenuHandler.Create(Loader);
+                    createActors();
                 }
             }
             else
@@ -127,7 +132,11 @@ namespace LD28
                     {
                         GameManager.Space.Update((float)(gameTime.ElapsedGameTime.TotalSeconds));
                         RenderingDevice.Update(gameTime);
-                        // update all the actors
+                        
+                        Player.Update(gameTime);
+                        foreach(Actor a in actorList)
+                            a.Update(gameTime);
+
                         SubtitleBox.Update();
                         if(IsActive)
                         {
@@ -174,11 +183,40 @@ namespace LD28
         public void DrawScene(GameTime gameTime)
         {
             RenderingDevice.Draw();
-            // draw everything else in some actor list somewhere
+            
+            foreach(Actor a in actorList)
+                a.Draw(); // draws billboards and anything else
+
             SubtitleBox.Draw();
         }
 
+        protected void createActors()
+        {
+            Player = new Player();
+            
+        }
 
+        public void Start()
+        {
+            foreach(Actor a in actorList)
+            {
+                RenderingDevice.Add(a);
+                GameManager.Space.Add(a);
+            }
+            GameManager.Space.Add(Player);
+        }
+
+        public void End()
+        {
+            foreach(Actor a in actorList)
+            {
+                RenderingDevice.Remove(a);
+                GameManager.Space.Remove(a);
+            }
+            GameManager.Space.Remove(Player);
+            actorList.Clear();
+            createActors();
+        }
 
 #if WINDOWS
         protected void SystemEvents_SessionSwitch(object sender, Microsoft.Win32.SessionSwitchEventArgs e)

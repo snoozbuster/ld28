@@ -515,7 +515,7 @@ namespace LD28
                 selectedControl.IsSelected = null;
 
                 menu = new ConfirmationMenu("Are you sure you want to return to the main menu?\n                    All progress will be lost.",
-                    delegate { MediaSystem.PlayTrack(SongOptions.Menu); GameManager.State = GameState.MainMenu; });
+                    delegate { MediaSystem.PlayTrack(SongOptions.Menu); GameManager.State = GameState.MainMenu; Program.Game.End(); });
             }
 
             public override void Draw(GameTime gameTime)
@@ -586,7 +586,7 @@ namespace LD28
             public MainMenu()
             {
                 MenuButton quit;
-                start = new MenuButton(loader.startButton, delegate { GameManager.State = GameState.Running; timerInMilliseconds = 0; });
+                start = new MenuButton(loader.startButton, delegate { GameManager.State = GameState.Running; timerInMilliseconds = 0; Program.Game.Start(); });
                 instructions = new MenuButton(loader.instructionsButton, delegate { /* todo: instructions */ });
                 quit = new MenuButton(loader.quitButton, delegate { GameManager.State = GameState.Exiting; });
 

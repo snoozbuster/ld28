@@ -11,7 +11,7 @@ using System.Text;
 
 namespace LD28
 {
-    public abstract class Building : Actor
+    public class Building : Actor
     {
         public override void Heal(float amount) { } // do nothing
         public override void Damage(float amount, Actor attacker) { } // do nothing

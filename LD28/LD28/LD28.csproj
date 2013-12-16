@@ -59,6 +59,9 @@
     <PlatformTarget>x86</PlatformTarget>
     <XnaCompressContent>true</XnaCompressContent>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>LD28.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accelerated_Delivery">
       <HintPath>AD_Core\Accelerated_Delivery.dll</HintPath>
@@ -90,7 +93,9 @@
     <Compile Include="Actors\Entities\Player.cs" />
     <Compile Include="Actors\Entities\Robot.cs" />
     <Compile Include="Actors\BillboardDrawingObject.cs" />
-    <Compile Include="Actors\Nature.cs" />
+    <Compile Include="Actors\Environment\Grass.cs" />
+    <Compile Include="Actors\Environment\Nature.cs" />
+    <Compile Include="Actors\Environment\NatureGroup.cs" />
     <Compile Include="CharacterCamera.cs" />
     <Compile Include="CharacterController\CharacterController.cs" />
     <Compile Include="CharacterController\CharacterControllerInput.cs" />
