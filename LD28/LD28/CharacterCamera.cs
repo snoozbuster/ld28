@@ -8,6 +8,7 @@ using BEPUphysics.MathExtensions;
 using System;
 using Accelerated_Delivery_Win;
 using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.Collidables.MobileCollidables;
 
 namespace LD28
 {
@@ -189,8 +190,8 @@ namespace LD28
         {
             if(Input.ControlScheme == ControlScheme.Keyboard)
             {
-                Yaw += (200 - Input.MouseState.X) * dt * .12f;
-                Pitch += (200 - Input.MouseState.Y) * dt * .12f;
+                Yaw += (RenderingDevice.GraphicsDevice.Viewport.Width - Input.MouseState.X) * dt * .12f;
+                Pitch += (RenderingDevice.GraphicsDevice.Viewport.Height - Input.MouseState.Y) * dt * .12f;
             }
             else if(Input.ControlScheme == ControlScheme.XboxController)
             {
@@ -249,15 +250,11 @@ namespace LD28
                     if(Input.KeyboardState.IsKeyDown(Keys.LeftShift))
                         MoveUp(-distance);
                 }
-
-                // todo: add keypress interaction with things and other controls as needed
-                // probably need to raycast
             }
 
             World = World * Matrix.CreateTranslation(Position);
             View = Matrix.Invert(World);
         }
-
 
         public void Reset() { throw new NotImplementedException(); }
 

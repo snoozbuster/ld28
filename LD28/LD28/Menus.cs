@@ -420,7 +420,7 @@ namespace LD28
                     new string[] { "Okay" }, 0, MessageBoxIcon.Error);
 #else
                 if(GameManager.PreviousState == GameState.Running)
-                    GameManager.DrawLevel(gameTime);
+                    Program.Game.DrawScene(gameTime);
 
                 RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null);
 
@@ -458,7 +458,7 @@ namespace LD28
             public override void Draw(GameTime gameTime)
             {
                 if(GameManager.PreviousState == GameState.Running)
-                    GameManager.DrawLevel(gameTime);
+                    Program.Game.DrawScene(gameTime);
 
                 RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null);
 
@@ -514,7 +514,7 @@ namespace LD28
 
             public override void Draw(GameTime gameTime)
             {
-                GameManager.DrawLevel(gameTime);
+                Program.Game.DrawScene(gameTime);
 
                 RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null);
 
@@ -593,14 +593,7 @@ namespace LD28
             public override void Draw(GameTime gameTime)
             {
                 RenderingDevice.GraphicsDevice.Clear(Color.White);
-                if(!Program.Game.Loading)
-                {
-                    //MediaSystem.PlayTrack(SongOptions.Menu);
-                    RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null);
-                    RenderingDevice.SpriteBatch.Draw(loader.loadingSplash, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.5f), null, Color.White, 0, Vector2.Zero, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
-                    RenderingDevice.SpriteBatch.End();
-                }
-                else if(Input.MessagePad == null || (startBeenPressed && timer > 0))
+                if(Input.MessagePad == null || (startBeenPressed && timer > 0))
                 {
                     int time = startBeenPressed ? smallerTime : largerTime;
  
@@ -705,7 +698,7 @@ namespace LD28
                 if(GameManager.PreviousState == GameState.MainMenu)
                     mainMenu.Draw(gameTime);
                 else
-                    GameManager.DrawLevel(gameTime);
+                    Program.Game.DrawScene(gameTime);
 
                 RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null);
 

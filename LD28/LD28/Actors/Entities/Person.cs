@@ -6,6 +6,7 @@ using Microsoft.Xna.Framework;
 using BEPUphysics.Entities;
 using Microsoft.Xna.Framework.Graphics;
 using BEPUphysics.Entities.Prefabs;
+using Microsoft.Xna.Framework.Input;
 
 namespace LD28
 {
@@ -15,9 +16,12 @@ namespace LD28
         protected string name;
         protected float talkDistance;
 
+        protected bool canTalk = true;
+
         public Person(Vector3 position, Texture2D personTex, string text, float talkDistance, string name, float health)
             : base(new Box(position, personTex.Width, personTex.Height, personTex.Width),
-                   new BillboardDrawingObject(position, personTex, delegate { return Program.Game.Loader.BillboardEffect; }), health)
+                   new BillboardDrawingObject(position, personTex, delegate { return Program.Game.Loader.BillboardEffect; }), 
+                   health)
         {
             this.text = text;
             this.talkDistance = talkDistance;
@@ -26,13 +30,15 @@ namespace LD28
         
         public override void Update(GameTime gameTime)
         {
-            
+            if(!canTalk && !SubtitleBox.IsShowing)
+                canTalk = true;
         }
 
         protected override void onKeypress(KeypressEventArgs eventArgs)
         {
-            if(eventArgs.Distance < talkDistance && text != null)
+            if(canTalk && eventArgs.Keypress == Keys.Enter && eventArgs.Distance < talkDistance && text != null)
                 SubtitleBox.AddMessage(text, name);
+            canTalk = false;
         }
 
         protected override void onDeath(Actor killer)

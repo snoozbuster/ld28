@@ -219,22 +219,22 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
                 if (Input.KeyboardState.IsKeyDown(Keys.W))
                 {
                     movementDir = Camera.World.Forward;
-                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
+                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
                 }
                 if(Input.KeyboardState.IsKeyDown(Keys.S))
                 {
                     movementDir = Camera.World.Forward;
-                    totalMovement -= Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
+                    totalMovement -= Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
                 }
                 if(Input.KeyboardState.IsKeyDown(Keys.A))
                 {
                     movementDir = Camera.World.Left;
-                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
+                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
                 }
                 if(Input.KeyboardState.IsKeyDown(Keys.D))
                 {
                     movementDir = Camera.World.Right;
-                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
+                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
                 }
                 if (totalMovement == Vector2.Zero)
                     CharacterController.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;

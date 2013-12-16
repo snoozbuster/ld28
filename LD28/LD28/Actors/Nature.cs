@@ -27,6 +27,8 @@ namespace LD28
                 player.TakeMorality(0.1f);
         }
 
+        public override void Update(GameTime gameTime) { }
+
         public override void Damage(float amount, Actor attacker)
         {
             if(!float.IsInfinity(Health))

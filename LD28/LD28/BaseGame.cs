@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Accelerated_Delivery_Win;
+using Microsoft.Win32;
 
 namespace LD28
 {
@@ -19,12 +20,14 @@ namespace LD28
     {
         public GraphicsDeviceManager Graphics;
         private LoadingScreen loadingScreen;
-        SpriteBatch spriteBatch;
+        //SpriteBatch spriteBatch;
 
         public Player Player { get; private set; }
         public Loader Loader { get; private set; }
 
         public bool Loading { get; private set; }
+
+        private bool locked = false;
 
         public BaseGame()
         {
@@ -41,6 +44,8 @@ namespace LD28
         protected override void Initialize()
         {
             GameManager.FirstStageInitialization(this, Program.Cutter);
+            Loading = true;
+            Microsoft.Win32.SystemEvents.SessionSwitch += new Microsoft.Win32.SessionSwitchEventHandler(SystemEvents_SessionSwitch);
 
             base.Initialize();
         }
@@ -52,9 +57,10 @@ namespace LD28
         protected override void LoadContent()
         {
             // Create a new SpriteBatch, which can be used to draw textures.
-            spriteBatch = new SpriteBatch(GraphicsDevice);
+            //spriteBatch = new SpriteBatch(GraphicsDevice);
 
-            //RenderingDevice.Initialize(graphics, new BoxCutter(true, false, Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData) + "\\LD28\\"), new BEPUphysics.Space(), null);
+            RenderingDevice.Initialize(Graphics, Program.Cutter, GameManager.Space, Content.Load<Effect>("shaders/shadowmap"));
+            loadingScreen = new LoadingScreen(Content, GraphicsDevice);
         }
 
         /// <summary>
@@ -62,9 +68,7 @@ namespace LD28
         /// all content.
         /// </summary>
         protected override void UnloadContent()
-        {
-            // TODO: Unload any non ContentManager content here
-        }
+        { }
 
         /// <summary>
         /// Allows the game to run logic such as updating the world,
@@ -73,11 +77,36 @@ namespace LD28
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if(GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            if((!IsActive && Loader != null) || locked)
+            {
+                base.Update(gameTime);
+                return;
+            }
 
-            // TODO: Add your update logic here
+            Input.Update(gameTime, false);
+
+            if(Loading)
+            {
+                Loader l = loadingScreen.Update(gameTime);
+                if(l != null)
+                {
+                    Loader = l;
+                    loadingScreen = null;
+                    Loading = false;
+                    MenuHandler.Create(Loader);
+                }
+            }
+            else
+                MenuHandler.Update(gameTime);
+
+            if(GameManager.State == GameState.Running)
+            {
+                GameManager.Space.Update((float)(gameTime.ElapsedGameTime.TotalSeconds));
+                RenderingDevice.Update(gameTime);
+                // update all the actors
+                if(IsActive)
+                    Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
+            }
 
             base.Update(gameTime);
         }
@@ -90,9 +119,42 @@ namespace LD28
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
 
-            // TODO: Add your drawing code here
+            if(Loading)
+            {
+                // draw background here
+                loadingScreen.Draw();
+            }
+            else
+                MenuHandler.Draw(gameTime);
+
+            if(GameManager.State == GameState.Running)
+                DrawScene(gameTime);
 
             base.Draw(gameTime);
         }
+
+        public void DrawScene(GameTime gameTime)
+        {
+            RenderingDevice.Draw();
+            // draw everything else in some actor list somewhere
+        }
+
+
+
+#if WINDOWS
+        protected void SystemEvents_SessionSwitch(object sender, Microsoft.Win32.SessionSwitchEventArgs e)
+        {
+            if(e.Reason == SessionSwitchReason.SessionLock)
+            {
+                OnDeactivated(sender, e);
+                locked = true;
+            }
+            else if(e.Reason == SessionSwitchReason.SessionUnlock)
+            {
+                OnActivated(sender, e);
+                locked = false;
+            }
+        }
+#endif
     }
 }

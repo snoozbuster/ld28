@@ -60,6 +60,8 @@ namespace LD28
                 baseJoint.IsActive = true;
                 PhysicsObject.CollisionInformation.CollisionRules.Group = staticObjects;
             }
+
+            PhysicsObject.Tag = this;
         }
 
         public virtual void Damage(float amount, Actor attacker)
@@ -92,6 +94,11 @@ namespace LD28
             Inactive = true; 
             space.Remove(this); 
             RenderingDevice.Remove(this); 
+        }
+
+        public void DoEvent(KeypressEventArgs args)
+        {
+            OnKeypress(args);
         }
 
         protected void unlockFromWorld()

@@ -1,4 +1,7 @@
 ﻿using Accelerated_Delivery_Win;
+using BEPUphysics;
+using BEPUphysics.BroadPhaseEntries;
+using BEPUphysics.CollisionRuleManagement;
 using BEPUphysicsDemos.AlternateMovement.Character;
 using Microsoft.Xna.Framework;
 using System;
@@ -18,9 +21,11 @@ namespace LD28
             : base(null, null, 100)
         {
             character = new CharacterControllerInput(GameManager.Space, RenderingDevice.Camera as CharacterCamera);
-            character.CharacterController.Tag = this;
+            character.CharacterController.Body.Tag = this;
             PhysicsObject = character.CharacterController.Body; // for posterity
             PhysicsObject.CollisionInformation.CollisionRules.Group = dynamicObjects; // also for posterity
+
+            rayCastFilter = RayCastFilter;
         }
 
         // eventually these will deal with drawing the sword
@@ -31,8 +36,29 @@ namespace LD28
         public override void Update(GameTime gameTime)
         {
             if(character.IsActive)
+            {
                 character.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
-            // todo: sword updating
+
+                Vector3 startPosition = RenderingDevice.Camera.Position;
+                RayCastResult raycastResult;
+                if(GameManager.Space.RayCast(new Ray(startPosition, RenderingDevice.Camera.World.Forward), 5, rayCastFilter, out raycastResult))
+                {
+                    var actorCollision = raycastResult.HitObject.Tag as Actor;
+                    // If there's a valid ray hit, then ping the connected object!
+                    KeypressEventArgs args = KeypressEventArgs.FromCurrentInput(Program.Game.Player, actorCollision);
+                    if(args != null)
+                        // I'm doing this all backwards.
+                        actorCollision.DoEvent(args);
+                }
+                
+                // todo: sword swinging
+            }
+        }
+
+        Func<BroadPhaseEntry, bool> rayCastFilter;
+        bool RayCastFilter(BroadPhaseEntry entry)
+        {
+            return entry.CollisionRules.Personal <= CollisionRule.Normal;
         }
 
         public override void OnAdditionToSpace(BEPUphysics.ISpace newSpace)
