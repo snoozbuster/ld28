@@ -82,14 +82,24 @@
     <Reference Include="System.Net" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Actor.cs" />
+    <Compile Include="Actors\Actor.cs" />
+    <Compile Include="Actors\Buildings\Building.cs" />
+    <Compile Include="Actors\Buildings\BuildingInterior.cs" />
     <Compile Include="BillboardDrawingObject.cs" />
     <Compile Include="CharacterCamera.cs" />
+    <Compile Include="CharacterController\CharacterController.cs" />
+    <Compile Include="CharacterController\CharacterControllerInput.cs" />
+    <Compile Include="CharacterController\HorizontalMotionConstraint.cs" />
+    <Compile Include="CharacterController\QueryManager.cs" />
+    <Compile Include="CharacterController\StanceManager.cs" />
+    <Compile Include="CharacterController\StepManager.cs" />
+    <Compile Include="CharacterController\SupportFinder.cs" />
+    <Compile Include="CharacterController\VerticalMotionConstraint.cs" />
     <Compile Include="IDrawableObject.cs" />
     <Compile Include="Loader.cs" />
     <Compile Include="LoadingScreen.cs" />
     <Compile Include="ModelDrawingObject.cs" />
-    <Compile Include="Person.cs" />
+    <Compile Include="Actors\Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="BaseGame.cs" />

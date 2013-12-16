@@ -18,6 +18,7 @@ using BEPUphysics.CollisionShapes.ConvexShapes;
 using BEPUphysics.Collidables;
 using Microsoft.Xna.Framework.Input;
 using BEPUphysics.Entities;
+using BEPUphysics.BroadPhaseEntries;
 
 namespace BEPUphysicsDemos.AlternateMovement.Character
 {

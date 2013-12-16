@@ -15,9 +15,9 @@ namespace LD28
         protected string name;
         protected float talkDistance;
 
-        public Person(Vector3 position, Texture2D personTex, string text, float talkDistance, string name)
-            : base(new Box(position, personTex.Width, personTex.Height, personTex.Width), 
-                   new BillboardDrawingObject(position, personTex, delegate { return Program.Game.Loader.BillboardEffect; }))
+        public Person(Vector3 position, Texture2D personTex, string text, float talkDistance, string name, float health)
+            : base(new Box(position, personTex.Width, personTex.Height, personTex.Width),
+                   new BillboardDrawingObject(position, personTex, delegate { return Program.Game.Loader.BillboardEffect; }), health)
         {
             this.text = text;
             this.talkDistance = talkDistance;
@@ -32,7 +32,7 @@ namespace LD28
         protected override void onKeypress(KeypressEventArgs eventArgs)
         {
             if(eventArgs.Distance < talkDistance && text != null)
-                ; // do something maybe?
+                SubtitleBox.AddMessage(text, name);
         }
     }
 }

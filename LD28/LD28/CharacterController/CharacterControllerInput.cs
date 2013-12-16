@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework.Input;
 using System;
 using System.Diagnostics;
 using BEPUphysics.Collidables.MobileCollidables;
+using LD28;
+using Accelerated_Delivery_Win;
 
 namespace BEPUphysicsDemos.AlternateMovement.Character
 {
@@ -16,7 +18,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
         /// <summary>
         /// Camera to use for input.
         /// </summary>
-        public Camera Camera;
+        public CharacterCamera Camera;
 
         /// <summary>
         /// Offset from the position of the character to the 'eyes' while the character is standing.
@@ -54,7 +56,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
         /// </summary>
         /// <param name="owningSpace">Space to add the character to.</param>
         /// <param name="CameraToUse">Camera to attach to the character.</param>
-        public CharacterControllerInput(Space owningSpace, Camera CameraToUse)
+        public CharacterControllerInput(Space owningSpace, CharacterCamera CameraToUse)
         {
             CharacterController = new CharacterController();
 
@@ -102,7 +104,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
         /// <param name="keyboardInput">The current frame's keyboard state.</param>
         /// <param name="previousGamePadInput">The last frame's gamepad state.</param>
         /// <param name="gamePadInput">The current frame's keyboard state.</param>
-        public void Update(float dt, KeyboardState previousKeyboardInput, KeyboardState keyboardInput, GamePadState previousGamePadInput, GamePadState gamePadInput)
+        public void Update(float dt)
         {
             if (IsActive)
             {
@@ -214,24 +216,24 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
 
                 Vector3 movementDir;
 
-                if (keyboardInput.IsKeyDown(Keys.E))
+                if (Input.KeyboardState.IsKeyDown(Keys.W))
                 {
-                    movementDir = Camera.WorldMatrix.Forward;
+                    movementDir = Camera.World.Forward;
                     totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
                 }
-                if (keyboardInput.IsKeyDown(Keys.D))
+                if(Input.KeyboardState.IsKeyDown(Keys.S))
                 {
-                    movementDir = Camera.WorldMatrix.Forward;
+                    movementDir = Camera.World.Forward;
                     totalMovement -= Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
                 }
-                if (keyboardInput.IsKeyDown(Keys.S))
+                if(Input.KeyboardState.IsKeyDown(Keys.A))
                 {
-                    movementDir = Camera.WorldMatrix.Left;
+                    movementDir = Camera.World.Left;
                     totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
                 }
-                if (keyboardInput.IsKeyDown(Keys.F))
+                if(Input.KeyboardState.IsKeyDown(Keys.D))
                 {
-                    movementDir = Camera.WorldMatrix.Right;
+                    movementDir = Camera.World.Right;
                     totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Z));
                 }
                 if (totalMovement == Vector2.Zero)
@@ -239,10 +241,10 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
                 else
                     CharacterController.HorizontalMotionConstraint.MovementDirection = Vector2.Normalize(totalMovement);
 
-                CharacterController.StanceManager.DesiredStance = keyboardInput.IsKeyDown(Keys.Z) ? Stance.Crouching : Stance.Standing;
+                CharacterController.StanceManager.DesiredStance = Input.KeyboardState.IsKeyDown(Keys.LeftShift) ? Stance.Crouching : Stance.Standing;
 
                 //Jumping
-                if (previousKeyboardInput.IsKeyUp(Keys.A) && keyboardInput.IsKeyDown(Keys.A))
+                if (Input.CheckKeyboardJustPressed(Keys.Space))
                 {
                     CharacterController.Jump();
                 }

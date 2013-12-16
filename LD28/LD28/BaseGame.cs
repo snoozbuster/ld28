@@ -36,7 +36,7 @@ namespace LD28
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            GameManager.FirstStageInitialization(this, Program.Cutter);
 
             base.Initialize();
         }

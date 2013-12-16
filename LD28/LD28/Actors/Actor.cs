@@ -1,4 +1,5 @@
 ﻿using Accelerated_Delivery_Win;
+using BEPUphysics;
 using BEPUphysics.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -9,27 +10,71 @@ using System.Text;
 
 namespace LD28
 {
-    public abstract class Actor : IRenderableObject
+    public abstract class Actor : IRenderableObject, ISpaceObject
     {
         public Entity PhysicsObject { get; protected set; }
-        public virtual IDrawableObject DrawingObject { get; protected set; }
+        public IDrawableObject DrawingObject { get; protected set; }
 
-        public event Action<KeypressEventArgs> KeyPressedOn;
+        public float Health { get; protected set; }
+        public float MaxHealth { get; protected set; }
 
-        public Actor(Entity entity, IDrawableObject drawing)
+        public event Action<KeypressEventArgs> OnKeypress;
+        public event Action<Actor> OnDeath;
+
+        /// <summary>
+        /// This is a generic value for activity; it could be used to represent death or
+        /// that an object hasn't appeared yet; if it is false the Actor should not be drawn.
+        /// In most cases the Actor shouldn't be updated, either, and it should be removed from its
+        /// Space.
+        /// </summary>
+        public bool Inactive { get; protected set; }
+
+        public Actor(Entity entity, IDrawableObject drawing, float health)
         {
+            if(entity.Space != null)
+                throw new ArgumentException("This physics object already belongs to a space.");
+
             PhysicsObject = entity;
             DrawingObject = drawing;
-            KeyPressedOn += onKeypress;
+            OnKeypress += onKeypress;
+            OnDeath += onDeath;
+
+            Health = MaxHealth = health;
+        }
+
+        public virtual void Damage(float amount, Actor attacker)
+        {
+            Health -= amount;
+            if(Health < 0)
+                Health = 0;
+
+            if(Health == 0)
+                OnDeath(attacker);
+        }
+
+        public virtual void Heal(float amount)
+        {
+            Health += amount;
+            if(Health > MaxHealth)
+                Health = MaxHealth;
         }
 
         public abstract void Update(GameTime gameTime);
         public virtual void Draw()
         {
-            DrawingObject.Draw();
+            if(!Inactive)
+                DrawingObject.Draw();
         }
 
-        public void AddToRenderer()
+        protected virtual void onKeypress(KeypressEventArgs eventArgs) { }
+        protected virtual void onDeath(Actor killer) 
+        { 
+            Inactive = true; 
+            space.Remove(this); 
+            RenderingDevice.Remove(this); 
+        }
+
+        public virtual void AddToRenderer()
         {
             DrawingObject.AddToRenderer();
         }
@@ -39,7 +84,29 @@ namespace LD28
             DrawingObject.RemoveFromRenderer();
         }
 
-        protected virtual void onKeypress(KeypressEventArgs eventArgs) { }
+        public void OnAdditionToSpace(ISpace newSpace)
+        {
+            newSpace.Add(PhysicsObject);
+        }
+
+        public void OnRemovalFromSpace(ISpace oldSpace)
+        {
+            oldSpace.Remove(PhysicsObject);
+        }
+
+        protected ISpace space;
+        public ISpace Space
+        {
+            get { return space; }
+            set 
+            { 
+                if(value == null) return; 
+                if(space != null) OnRemovalFromSpace(space); 
+                OnAdditionToSpace(value); space = value; 
+            }
+        }
+
+        public object Tag { get; set; }
     }
 
     public class KeypressEventArgs : EventArgs

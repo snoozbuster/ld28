@@ -14,7 +14,7 @@ namespace LD28
     /// <summary>
     /// Simple camera class for moving around the demos area.
     /// </summary>
-    public class Camera : ICamera
+    public class CharacterCamera : ICamera
     {
         /// <summary>
         /// Gets or sets the position of the camera.
@@ -137,7 +137,7 @@ namespace LD28
         /// <param name="p">Initial pitch angle of the camera.</param>
         /// <param name="y">Initial yaw value of the camera.</param>
         /// <param name="projMatrix">Projection matrix used.</param>
-        public Camera()
+        public CharacterCamera()
         {
             Position = Vector3.Zero;
             Speed = 10;
@@ -249,6 +249,9 @@ namespace LD28
                     if(Input.KeyboardState.IsKeyDown(Keys.LeftShift))
                         MoveUp(-distance);
                 }
+
+                // todo: add keypress interaction with things and other controls as needed
+                // probably need to raycast
             }
 
             World = World * Matrix.CreateTranslation(Position);

@@ -42,7 +42,11 @@ namespace LD28
         public static void AddMessage(string text, string name = null)
         {
             foreach(string str in text.Split('\n'))
-                messageQueue.Enqueue(new TextBoxData(name, str));
+            {
+                TextBoxData txt = new TextBoxData(name, str);
+                if(!messageQueue.Any(v => { return v == txt; }))
+                    messageQueue.Enqueue(txt);
+            }
         }
 
         public static void Draw()
@@ -89,6 +93,25 @@ namespace LD28
                 if(Name != null)
                     return Name + ":\n" + Text;
                 return Text;
+            }
+
+            public override int GetHashCode() { return base.GetHashCode(); }
+
+            public override bool Equals(object obj)
+            {
+                if(obj is TextBoxData)
+                    return this == (TextBoxData)obj;
+                return false;
+            }
+
+            public static bool operator==(TextBoxData lhs, TextBoxData rhs)
+            {
+                return lhs.Name == rhs.Name && lhs.Text == rhs.Text;
+            }
+
+            public static bool operator!=(TextBoxData lhs, TextBoxData rhs)
+            {
+                return !(lhs == rhs);
             }
         }
     }
