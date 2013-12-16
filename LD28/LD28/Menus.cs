@@ -11,6 +11,7 @@ using Microsoft.Xna.Framework.Input;
 using Microsoft.Xna.Framework.Media;
 using Accelerated_Delivery_Win;
 using System.IO;
+using Microsoft.Win32;
 
 namespace LD28
 {
@@ -26,10 +27,11 @@ namespace LD28
         private static PauseMenu pauseMenu;
         private static MainMenu mainMenu;
         private static GamePadDCMenu disconnectMenu;
-        private static GameOverMenu gameOverMenu;
+        private static EndingMenu gameOverMenu;
         private static ExitMenu exitMenu;
         private static GamePadQueryMenu queryMenu;
         private static EndingMenu endingMenu;
+        private static EndingMenu badEndingMenu;
 
         private static Loader loader;
 
@@ -38,11 +40,12 @@ namespace LD28
             loader = l;
             pauseMenu = new PauseMenu();
             mainMenu = new MainMenu();
-            gameOverMenu = new GameOverMenu();
+            gameOverMenu = new EndingMenu(loader.death_end);
             disconnectMenu = new GamePadDCMenu();
             exitMenu = new ExitMenu();
             queryMenu = new GamePadQueryMenu();
-            endingMenu = new EndingMenu();
+            endingMenu = new EndingMenu(loader.good_end);
+            badEndingMenu = new EndingMenu(loader.bad_end);
         }
 
         public static void Draw(GameTime gameTime)
@@ -404,48 +407,6 @@ namespace LD28
         }
         #endregion
 
-        #region Game Over
-        private class GameOverMenu : Menu
-        {
-            public GameOverMenu()
-            {
-                MenuControl restart, levSel, mainMenu, quit;
-                restart = new MenuButton(loader.gameOverRestartButton, delegate { GameManager.State = GameState.Running; GameManager.CurrentLevel.ResetLevel(); });
-                levSel = new MenuButton(loader.gameOverLevSelButton, delegate { GameManager.CurrentLevel.RemoveFromGame(GameManager.Space); GameManager.LevelNumber = -1; GameManager.State = GameState.Menuing_Lev; MediaSystem.PlayTrack(SongOptions.Menu); });
-                mainMenu = new MenuButton(loader.mainMenuButton, delegate { GameManager.CurrentLevel.RemoveFromGame(GameManager.Space); GameManager.LevelNumber = -1; MediaSystem.PlayTrack(SongOptions.Menu); });
-                quit = new MenuButton(loader.pauseQuitButton, delegate { GameManager.State = GameState.Exiting; });
-                restart.SetDirectionals(null, levSel, null, null);
-                levSel.SetDirectionals(restart, mainMenu, null, null);
-                mainMenu.SetDirectionals(levSel, quit, null, null);
-                quit.SetDirectionals(mainMenu, null, null, null);
-                
-                controlArray.Add(restart);
-                controlArray.Add(levSel);
-                controlArray.Add(mainMenu);
-                controlArray.Add(quit);
-                selectedControl = restart;
-                selectedControl.IsSelected = null;
-            }
-
-            public override void Draw(GameTime gameTime)
-            {
-                GameManager.DrawLevel(gameTime);
-
-                RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null);
-                RenderingDevice.SpriteBatch.DrawString(loader.Font, "You have lost too many boxes.", new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.19f), Color.White, 0.0f, loader.Font.MeasureString("You have lost too many boxes") * 0.5f, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
-
-                base.Draw(gameTime);
-
-                RenderingDevice.SpriteBatch.End();
-            }
-
-            public override void Update(GameTime gameTime)
-            {
-                base.Update(gameTime);
-            }
-        }
-        #endregion
-
         #region Game Pad Disconnected
         private class GamePadDCMenu : Menu
         {
@@ -527,10 +488,8 @@ namespace LD28
         #region Pause
         private class PauseMenu : Menu
         {
-            private readonly ToggleControl voice;
             private readonly MenuButton resume;
             private bool confirming = false;
-            private bool confirmRestart = false;
             private ConfirmationMenu menu;
 
             public PauseMenu()
@@ -624,17 +583,10 @@ namespace LD28
                 start = new MenuButton(loader.startButton, delegate { if(MediaSystem.PlayingVoiceActing) return; GameManager.LevelNumber = 1; timerInMilliseconds = 0; GameManager.LevelEnteredFrom = GameState.Running; });
                 instructions = new MenuButton(loader.instructionsButton, delegate { GameManager.LevelNumber = 0; GameManager.LevelEnteredFrom = GameState.MainMenu; });
                 quit = new MenuButton(loader.quitButton, delegate { GameManager.State = GameState.Exiting; });
-                //saves.IsDisabled = true;
-                //objectives.IsDisabled = true;
-                //highScores = new MenuButton(loader.highScoreButton, delegate { GameManager.State = GameState.Menuing_HiS; });
-                //highScores.IsDisabled = true;
 
                 start.SetDirectionals(null, instructions, null, null);
                 instructions.SetDirectionals(start, quit, null, null);
                 quit.SetDirectionals(instructions, null, null, null);
-                //levSel.SetDirectionals(instructions, quit, null, null);
-                //quit.SetDirectionals(levSel, null, null, null);
-                //controlArray.AddRange(new MenuControl[] { instructions, levSel, options, quit });
                 controlArray.AddRange(new MenuControl[] { instructions, start, quit });
             }
 
@@ -645,7 +597,7 @@ namespace LD28
                 {
                     //MediaSystem.PlayTrack(SongOptions.Menu);
                     RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, null, SamplerState.LinearClamp, null, null);
-                    RenderingDevice.SpriteBatch.Draw(loader.tbcSplash, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.5f), null, Color.White, 0, Vector2.Zero, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
+                    RenderingDevice.SpriteBatch.Draw(loader.loadingSplash, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.5f), null, Color.White, 0, Vector2.Zero, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
                     RenderingDevice.SpriteBatch.End();
                 }
                 else if(Input.MessagePad == null || (startBeenPressed && timer > 0))
@@ -793,6 +745,7 @@ namespace LD28
             public EndingMenu(Video end)
             {
                 this.end = end;
+                credits = loader.Credits;
                 onGDMReset(this, EventArgs.Empty);
                 RenderingDevice.GDM.DeviceReset += onGDMReset;
                 Program.Game.Deactivated += new EventHandler<EventArgs>(Game_Deactivated);
@@ -801,25 +754,13 @@ namespace LD28
 
             void Game_Activated(object sender, EventArgs e)
             {
-                if(player1playing)
-                    player.Resume();
-
-                player1playing = player2playing = false;
+                player.Resume();
             }
 
-            bool player1playing, player2playing;
             void Game_Deactivated(object sender, EventArgs e)
             {
                 if(player.State == MediaState.Playing)
-                {
-                    player1playing = true;
                     player.Pause();
-                }
-                else if(player2.State == MediaState.Playing)
-                {
-                    player2playing = true;
-                    player2.Pause();
-                }
             }
 
             private void onGDMReset(object sender, EventArgs e)
@@ -833,19 +774,12 @@ namespace LD28
                 gradient.SetData(colors);
 
                 player = new VideoPlayer();
-                player2 = new VideoPlayer();
 
-                player.IsMuted = player2.IsMuted = true;
+                player.IsMuted = true;
 
-                File.Copy("Content\\textures\\edn_1.xnb", Program.SavePath + "edn_0.wmv", true);
-                File.Copy("Content\\textures\\enr_1.xnb", Program.SavePath + "enr_0.wmv", true);
-                player.Play(end2);
-                player2.Play(end1);
-                File.Delete(Program.SavePath + "edn_0.wmv");
-                File.Delete(Program.SavePath + "enr_0.wmv");
+                player.Play(end);
 
                 player.Pause();
-                player2.Pause();
             }
 
             public override void Update(GameTime gameTime)
@@ -877,23 +811,20 @@ namespace LD28
                     else if(alpha - deltaA < 0 && fadingOut)
                     {
                         alpha = 0;
-                        if(player.State == MediaState.Paused && player2.State == MediaState.Paused)
-                        {
-                            if(Program.Game.Manager.CurrentSave.StarNumber == SaveData.MaxStars)
-                                player2.Resume();
-                            else
-                                player.Resume();
-                        }
-                        else if(player.State == MediaState.Stopped || player2.State == MediaState.Stopped)
+                        if(player.State == MediaState.Paused)
+                            player.Resume();
+                        else if(player.State == MediaState.Stopped)
                         {
                             time += (float)gameTime.ElapsedGameTime.TotalSeconds;
                             if(time >= secondsToPause)
                             {
                                 if(screenAlpha - deltaA < 0) // black background
                                 {
-                                    reset();
                                     GameManager.State = GameState.MainMenu;
                                     MediaSystem.PlayTrack(SongOptions.Menu);
+                                    using(RegistryKey k1 = Registry.CurrentUser.OpenSubKey("Software", true))
+                                        using(RegistryKey k2 = k1.CreateSubKey("LD28_Travesty"))
+                                            k2.SetValue("final", true);
                                 }
                                 else
                                     screenAlpha -= deltaA;
@@ -923,34 +854,8 @@ namespace LD28
 
                 if(player.State == MediaState.Playing)
                     RenderingDevice.SpriteBatch.Draw(player.GetTexture(), new Rectangle(0, 0, (int)RenderingDevice.Width, (int)RenderingDevice.Height), Color.White);
-                else if(player2.State == MediaState.Playing)
-                    RenderingDevice.SpriteBatch.Draw(player2.GetTexture(), new Rectangle(0, 0, (int)RenderingDevice.Width, (int)RenderingDevice.Height), Color.White);
 
                 RenderingDevice.SpriteBatch.End();
-            }
-
-            protected void reset()
-            {
-                time = alpha = 0;
-                screenAlpha = 255;
-                moved = false;
-                foreach(Sprite s in credits)
-                    s.Reset();
-
-                player = new VideoPlayer();
-                player2 = new VideoPlayer();
-
-                player.IsMuted = player2.IsMuted = true;
-
-                System.IO.File.Move("Content\\textures\\edn_1.xnb", "Content\\textures\\edn_0.wmv");
-                System.IO.File.Move("Content\\textures\\enr_1.xnb", "Content\\textures\\enr_0.wmv");
-                player.Play(end2);
-                player2.Play(end1);
-
-                System.IO.File.Move("Content\\textures\\edn_0.wmv", "Content\\textures\\edn_1.xnb");
-                System.IO.File.Move("Content\\textures\\enr_0.wmv", "Content\\textures\\enr_1.xnb");
-                player.Pause();
-                player2.Pause();
             }
         }
         #endregion

@@ -21,6 +21,8 @@ namespace LD28
         public event Action<KeypressEventArgs> OnKeypress;
         public event Action<Actor> OnDeath;
 
+        protected static Random random = new Random();
+
         /// <summary>
         /// This is a generic value for activity; it could be used to represent death or
         /// that an object hasn't appeared yet; if it is false the Actor should not be drawn.
@@ -79,17 +81,17 @@ namespace LD28
             DrawingObject.AddToRenderer();
         }
 
-        public void RemoveFromRenderer()
+        public virtual void RemoveFromRenderer()
         {
             DrawingObject.RemoveFromRenderer();
         }
 
-        public void OnAdditionToSpace(ISpace newSpace)
+        public virtual void OnAdditionToSpace(ISpace newSpace)
         {
             newSpace.Add(PhysicsObject);
         }
 
-        public void OnRemovalFromSpace(ISpace oldSpace)
+        public virtual void OnRemovalFromSpace(ISpace oldSpace)
         {
             oldSpace.Remove(PhysicsObject);
         }

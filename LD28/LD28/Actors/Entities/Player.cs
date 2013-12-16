@@ -6,11 +6,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace LD28.Actors
+namespace LD28
 {
     public class Player : Actor
     {
         protected CharacterControllerInput character;
+
+        public float Morality { get; private set; }
 
         public Player()
             : base(null, null, 100)
@@ -58,6 +60,16 @@ namespace LD28.Actors
         public void Deactivate()
         {
             character.Deactivate();
+        }
+
+        public void TakeMorality(float value)
+        {
+            Morality -= value;
+        }
+
+        public void GiveMorality(float value)
+        {
+            Morality += value;
         }
     }
 }

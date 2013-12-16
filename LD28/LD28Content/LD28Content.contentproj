@@ -44,13 +44,27 @@
   <ItemGroup>
     <Folder Include="models\" />
     <Folder Include="music\" />
-    <Folder Include="textures\" />
+    <Folder Include="video\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="font\font.spritefont">
       <Name>font</Name>
       <Importer>FontDescriptionImporter</Importer>
       <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="font\bigfont.spritefont">
+      <Name>bigfont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="textures\press_start.png">
+      <Name>press_start</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

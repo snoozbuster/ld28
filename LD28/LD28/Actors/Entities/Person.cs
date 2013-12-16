@@ -34,5 +34,13 @@ namespace LD28
             if(eventArgs.Distance < talkDistance && text != null)
                 SubtitleBox.AddMessage(text, name);
         }
+
+        protected override void onDeath(Actor killer)
+        {
+            base.onDeath(killer);
+            Player player = killer as Player;
+            if(player != null)
+                player.TakeMorality(MathHelper.Clamp((float)random.NextDouble(), 0.5f, 1) * random.Next(1, 4));
+        }
     }
 }

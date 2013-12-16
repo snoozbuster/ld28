@@ -19,8 +19,12 @@ namespace LD28
     {
         public GraphicsDeviceManager Graphics;
         private LoadingScreen loadingScreen;
-        public Loader Loader;
         SpriteBatch spriteBatch;
+
+        public Player Player { get; private set; }
+        public Loader Loader { get; private set; }
+
+        public bool Loading { get; private set; }
 
         public BaseGame()
         {
