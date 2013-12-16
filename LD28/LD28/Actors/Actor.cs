@@ -1,5 +1,7 @@
 ﻿using Accelerated_Delivery_Win;
 using BEPUphysics;
+using BEPUphysics.CollisionRuleManagement;
+using BEPUphysics.Constraints.SolverGroups;
 using BEPUphysics.Entities;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
@@ -21,7 +23,17 @@ namespace LD28
         public event Action<KeypressEventArgs> OnKeypress;
         public event Action<Actor> OnDeath;
 
+        protected WeldJoint baseJoint = null;
+
         protected static Random random = new Random();
+
+        protected static readonly CollisionGroup staticObjects = new CollisionGroup();
+        protected static readonly CollisionGroup dynamicObjects = new CollisionGroup();
+
+        static Actor()
+        {
+            CollisionGroup.DefineCollisionRule(staticObjects, staticObjects, CollisionRule.NoBroadPhase);
+        }
 
         /// <summary>
         /// This is a generic value for activity; it could be used to represent death or
@@ -42,6 +54,12 @@ namespace LD28
             OnDeath += onDeath;
 
             Health = MaxHealth = health;
+            if(PhysicsObject != null)
+            {
+                baseJoint = new WeldJoint(null, PhysicsObject);
+                baseJoint.IsActive = true;
+                PhysicsObject.CollisionInformation.CollisionRules.Group = staticObjects;
+            }
         }
 
         public virtual void Damage(float amount, Actor attacker)
@@ -76,6 +94,17 @@ namespace LD28
             RenderingDevice.Remove(this); 
         }
 
+        protected void unlockFromWorld()
+        {
+            if(baseJoint == null)
+                return;
+
+            PhysicsObject.CollisionInformation.CollisionRules.Group = dynamicObjects;
+            if(baseJoint.Solver != null)
+                space.Remove(baseJoint);
+            baseJoint = null;
+        }
+
         public virtual void AddToRenderer()
         {
             DrawingObject.AddToRenderer();
@@ -89,11 +118,15 @@ namespace LD28
         public virtual void OnAdditionToSpace(ISpace newSpace)
         {
             newSpace.Add(PhysicsObject);
+            if(baseJoint != null)
+                newSpace.Add(baseJoint);
         }
 
         public virtual void OnRemovalFromSpace(ISpace oldSpace)
         {
             oldSpace.Remove(PhysicsObject);
+            if(baseJoint != null)
+                oldSpace.Remove(baseJoint);
         }
 
         protected ISpace space;

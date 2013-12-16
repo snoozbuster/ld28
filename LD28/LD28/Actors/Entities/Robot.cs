@@ -21,6 +21,8 @@ namespace LD28
             detectionDistance = detection;
             attackDistance = attack;
             baseDamage = damage;
+
+            unlockFromWorld();
         }
 
         protected override void onDeath(Actor killer)

@@ -86,9 +86,11 @@
     <Compile Include="Actors\Actor.cs" />
     <Compile Include="Actors\Buildings\Building.cs" />
     <Compile Include="Actors\Buildings\BuildingInterior.cs" />
+    <Compile Include="Actors\Buildings\Door.cs" />
     <Compile Include="Actors\Entities\Player.cs" />
     <Compile Include="Actors\Entities\Robot.cs" />
     <Compile Include="Actors\BillboardDrawingObject.cs" />
+    <Compile Include="Actors\Nature.cs" />
     <Compile Include="CharacterCamera.cs" />
     <Compile Include="CharacterController\CharacterController.cs" />
     <Compile Include="CharacterController\CharacterControllerInput.cs" />

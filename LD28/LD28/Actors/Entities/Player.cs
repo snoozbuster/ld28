@@ -20,6 +20,7 @@ namespace LD28
             character = new CharacterControllerInput(GameManager.Space, RenderingDevice.Camera as CharacterCamera);
             character.CharacterController.Tag = this;
             PhysicsObject = character.CharacterController.Body; // for posterity
+            PhysicsObject.CollisionInformation.CollisionRules.Group = dynamicObjects; // also for posterity
         }
 
         // eventually these will deal with drawing the sword
