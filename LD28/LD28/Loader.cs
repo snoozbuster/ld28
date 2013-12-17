@@ -38,6 +38,8 @@ namespace LD28
         public Texture2D CrazyGuy;
         public Texture2D[] Heads;
         public Texture2D[] Bodies;
+        public Texture2D PoliceBody;
+        public Texture2D GangBody;
         #endregion
 
         #region Buttons
@@ -83,7 +85,7 @@ namespace LD28
 
         public IEnumerator<float> GetEnumerator()
         {
-            totalItems = 2 + 23 + 10 + 2 + 1;
+            totalItems = 2 + 24 + 10 + 2 + 1;
 
             #region Shaders
             BillboardEffect = content.Load<Effect>("shaders/bbEffect");
@@ -129,6 +131,8 @@ namespace LD28
             yield return progress();
             CrazyGuy = content.Load<Texture2D>("textures/people/char_crazyman");
             yield return progress();
+            GangBody = content.Load<Texture2D>("textures/people/bodies/char_body_gang");
+            yield return progress();
 
             Bodies = new Texture2D[6];
             Heads = new Texture2D[6];
@@ -139,6 +143,7 @@ namespace LD28
                 Heads[i-1] = content.Load<Texture2D>("textures/people/heads/char_head" + i);
                 yield return progress();
             }
+            PoliceBody = Bodies[5];
             #endregion
 
             #region Models

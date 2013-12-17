@@ -229,14 +229,57 @@ namespace LD28
             actorList.AddRange(getCoreTerrain());
             actorList.AddRange(getBuildings());
             actorList.AddRange(getPeople());
+            actorList.AddRange(getDoors());
         }
 
+        protected List<Actor> getDoors()
+        {
+            List<Actor> output = new List<Actor>();
+
+            return output;
+        }
         protected List<Actor> getPeople()
         {
             List<Actor> people = new List<Actor>();
             for(int i = 0; i < 30; i++)
                 people.Add(Person.GeneratePerson(5, 5));
+            people.AddRange(getApartmentPeople());
+            people.AddRange(getPolicePeople());
+            people.AddRange(getGangPeople());
             return people;
+        }
+        protected List<Actor> getApartmentPeople()
+        {
+            List<Actor> output = new List<Actor>();
+            Vector2 minLeft = new Vector2(-58, 52);
+            Vector2 maxLeft = new Vector2(-22, 64);
+            Vector2 minRight = new Vector2(-58, 85);
+            Vector2 maxRight = new Vector2(-22, 97);
+
+            Random r = new Random();
+            for(int i = 0; i < 10; i++)
+            {
+                int half = r.Next(2);
+                output.Add(Person.GeneratePersonWithinBounds(half == 1 ? minLeft : minRight, half == 1 ? maxLeft : maxRight,
+                    5, 5, r.Next(0, 4) * 10 + 1.75f));
+            }
+            return output;
+        }
+        protected List<Actor> getGangPeople()
+        {
+            List<Actor> output = new List<Actor>();
+            string text = "I'm in a gang. What of it?";
+            for(int i = 0; i < 3; i++)
+                output.Add(Person.GenerateGangMember(5, 5, text));
+            return output;
+        }
+        protected List<Actor> getPolicePeople()
+        {
+            List<Actor> output = new List<Actor>();
+            string text = "I'm an officer of the law. Don't break it.";
+            for(int i = 0; i < 3; i++)
+                output.Add(Person.GeneratePolice(5, 5, text));
+            return output;
         }
         protected List<Actor> getCoreTerrain()
         {
