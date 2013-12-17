@@ -33,6 +33,11 @@ namespace LD28
         public Texture2D TreeTexture;
         public Texture2D RockTexture;
         public Texture2D GrassTexture;
+
+        public Texture2D EvilPerson;
+        public Texture2D CrazyGuy;
+        public Texture2D[] Heads;
+        public Texture2D[] Bodies;
         #endregion
 
         #region Buttons
@@ -61,6 +66,13 @@ namespace LD28
         public Model Ground;
         public Model Trees;
         public Model Skydome;
+        public Model SkyscraperModel;
+        public Model PoliceModel;
+        public Model HouseModel;
+        public Model DoorModel;
+        public Model ApartmentModel;
+        public Model WarehouseModel;
+        public Model SwordModel;
         #endregion
 
         public Loader(ContentManager content)
@@ -70,7 +82,7 @@ namespace LD28
 
         public IEnumerator<float> GetEnumerator()
         {
-            totalItems = 2 + 9 + 3 + 2;
+            totalItems = 2 + 23 + 10 + 2;
 
             #region Shaders
             BillboardEffect = content.Load<Effect>("shaders/bbEffect");
@@ -110,6 +122,21 @@ namespace LD28
             yield return progress();
             RockTexture = content.Load<Texture2D>("textures/rock");
             yield return progress();
+
+            EvilPerson = content.Load<Texture2D>("textures/people/char_evildude");
+            yield return progress();
+            CrazyGuy = content.Load<Texture2D>("textures/people/char_crazyman");
+            yield return progress();
+
+            Bodies = new Texture2D[6];
+            Heads = new Texture2D[6];
+            for(int i = 1; i <= 6; i++)
+            {
+                Bodies[i-1] = content.Load<Texture2D>("textures/people/bodies/char_body" + i);
+                yield return progress();
+                Heads[i-1] = content.Load<Texture2D>("textures/people/heads/char_head" + i);
+                yield return progress();
+            }
             #endregion
 
             #region Models
@@ -118,6 +145,21 @@ namespace LD28
             Trees = content.Load<Model>("models/trees");
             yield return progress();
             Skydome = content.Load<Model>("models/skybox");
+            yield return progress();
+
+            SkyscraperModel = content.Load<Model>("models/skyscrapers");
+            yield return progress();
+            HouseModel = content.Load<Model>("models/houses");
+            yield return progress();
+            ApartmentModel = content.Load<Model>("models/apartments");
+            yield return progress();
+            PoliceModel = content.Load<Model>("models/police");
+            yield return progress();
+            DoorModel = content.Load<Model>("models/door");
+            yield return progress();
+            WarehouseModel = content.Load<Model>("models/warehouse");
+            yield return progress();
+            SwordModel = content.Load<Model>("models/sword");
             yield return progress();
             #endregion
 

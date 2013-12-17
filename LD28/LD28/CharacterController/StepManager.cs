@@ -24,7 +24,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
     public class StepManager
     {
         CharacterController character;
-        float maximumStepHeight = 1f;
+        float maximumStepHeight = 1.2f;
         /// <summary>
         /// Gets or sets the maximum height which the character is capable of stepping up or down onto.
         /// </summary>
@@ -71,7 +71,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
             this.character = character;
             //The minimum step height is just barely above where the character would generally find the ground.
             //This helps avoid excess tests.
-            minimumUpStepHeight = CollisionDetectionSettings.AllowedPenetration * 1.1f;// Math.Max(0, -.01f + character.Body.CollisionInformation.Shape.CollisionMargin * (1 - character.SupportFinder.sinMaximumSlope));
+            minimumUpStepHeight = CollisionDetectionSettings.AllowedPenetration * 1.2f;// Math.Max(0, -.01f + character.Body.CollisionInformation.Shape.CollisionMargin * (1 - character.SupportFinder.sinMaximumSlope));
 
         }
         

@@ -515,7 +515,7 @@ namespace LD28
                 selectedControl.IsSelected = null;
 
                 menu = new ConfirmationMenu("Are you sure you want to return to the main menu?\n                    All progress will be lost.",
-                    delegate { MediaSystem.PlayTrack(SongOptions.Menu); GameManager.State = GameState.MainMenu; Program.Game.End(); });
+                    delegate { Program.Game.BGM.Volume = 0.5f; GameManager.State = GameState.MainMenu; Program.Game.End(); });
             }
 
             public override void Draw(GameTime gameTime)
@@ -546,6 +546,7 @@ namespace LD28
 
             public override void Update(GameTime gameTime)
             {
+                Program.Game.BGM.Volume = 0.5f;
                 if(confirming)
                 {
                     menu.Update(gameTime);
@@ -564,6 +565,7 @@ namespace LD28
                     MediaSystem.PlaySoundEffect(SFXOptions.Pause);
                     selectedControl.IsSelected = false;
                     resume.IsSelected = null;
+                    Program.Game.BGM.Volume = 1;
                     return;
                 }
                 base.Update(gameTime);

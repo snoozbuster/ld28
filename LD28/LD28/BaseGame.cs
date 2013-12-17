@@ -32,6 +32,7 @@ namespace LD28
         private bool beenDrawn = false;
         private Texture2D loadingSplash;
 
+        public SoundEffectInstance BGM;
         private List<Actor> actorList = new List<Actor>();
 
         public BaseGame()
@@ -80,6 +81,11 @@ namespace LD28
             MyExtensions.Initialize(GraphicsDevice);
             loadingScreen = new LoadingScreen(Content, GraphicsDevice);
             loadingSplash = Content.Load<Texture2D>("textures/loading");
+
+            SoundEffect e = Content.Load<SoundEffect>("music/main");
+            BGM = e.CreateInstance();
+            BGM.IsLooped = true;
+            BGM.Play();
         }
 
         /// <summary>
@@ -220,8 +226,17 @@ namespace LD28
             actorList.AddRange(getRocks());
             actorList.AddRange(getGrass());
             actorList.AddRange(getCoreTerrain());
+            actorList.AddRange(getBuildings());
+            actorList.AddRange(getPeople());
         }
 
+        protected List<Actor> getPeople()
+        {
+            List<Actor> people = new List<Actor>();
+            for(int i = 0; i < 30; i++)
+                people.Add(Person.GeneratePerson(null, null, 5, 5));
+            return people;
+        }
         protected List<Actor> getCoreTerrain()
         {
             List<Actor> actors = new List<Actor>();
@@ -672,9 +687,73 @@ namespace LD28
             temp.Add(new Vector3(26, 10, 1));
             List<Actor> trees = new List<Actor>();
             foreach(Vector3 v in temp)
-                trees.Add(new Nature(v, Loader.GrassTexture, new Vector2(2, 2), 5));
+                trees.Add(new Nature(v, Loader.GrassTexture, new Vector2(2, 2), 5, false));
 
             return trees;
+        }
+        protected List<Actor> getBuildings()
+        {
+            List<Actor> actors = new List<Actor>();
+            //actors.Add(new Building(new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, new Vector3(40))));
+            //actors.Add(new Building(new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, new Vector3(100, 100, 40))));
+            //BaseModel scraper = new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, new Vector3(100, 100, 40));
+            //scraper.Ent.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
+            //actors.Add(new Building(scraper));
+            //actors.Add(getHouse(new Vector3(45, 105, 5.73529f), new Vector2(1, 0)));
+            //actors.Add(getHouse(new Vector3(23, 105, 5.73529f), new Vector2(1, 0)));
+            //actors.Add(getHouse(new Vector3(69, 3, 5.73529f), new Vector2(1, 0)));
+            //actors.Add(getHouse(new Vector3(45, 91, 5.73529f), new Vector2(-1, 0)));
+            //actors.Add(getHouse(new Vector3(23, 91, 5.73529f), new Vector2(-1, 0)));
+            //actors.Add(getHouse(new Vector3(63, 141, 5.73529f), new Vector2(-1, 0)));
+            //actors.Add(getHouse(new Vector3(9, 141, 5.73529f), new Vector2(-1, 0)));
+            //actors.Add(getHouse(new Vector3(42.8971f, -1, 5.73529f), new Vector2(0, 1)));
+            //actors.Add(getHouse(new Vector3(-13, 119, 5.73529f), new Vector2(0, -1)));
+
+            actors.Add(new Building(new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, Vector3.Zero)));
+            actors.Add(new Building(new BaseModel(delegate { return Loader.HouseModel; }, false, false, Vector3.Zero)));
+            actors.Add(new Building(new BaseModel(delegate { return Loader.ApartmentModel; }, false, false, Vector3.Zero)));
+            actors.Add(new Building(new BaseModel(delegate { return Loader.WarehouseModel; }, false, false, Vector3.Zero)));
+            //actors.Add(getPolice(new Vector3(121, 69, 5.73529f), new Vector2(0, 1)));
+
+            return actors;
+        }
+
+        protected Actor getHouse(Vector3 position, Vector2 direction)
+        {
+            BaseModel house = new BaseModel(delegate { return Loader.HouseModel; }, false, false, position);
+            BaseModel door = new BaseModel(delegate { return Loader.DoorModel; }, false, true, Vector3.Zero);
+            door.Ent.CollisionInformation.LocalPosition = new Vector3(0, -6.5f, 3.73529f);
+            Quaternion orientation;
+            if(direction.Y == 1)
+                orientation = Quaternion.Identity;
+            else if(direction.Y == -1)
+                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
+            else if(direction.X == 1)
+                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, -MathHelper.PiOver2);
+            else
+                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.PiOver2);
+            house.Ent.Orientation = orientation;
+            door.Ent.Orientation = orientation;
+            return new Building(house, new[] { new Door(door, new Vector3(direction, 0)) });
+        }
+
+        protected Actor getPolice(Vector3 position, Vector2 direction)
+        {
+            BaseModel house = new BaseModel(delegate { return Loader.PoliceModel; }, false, false, position);
+            BaseModel door = new BaseModel(delegate { return Loader.DoorModel; }, false, true, Vector3.Zero);
+            door.Ent.CollisionInformation.LocalPosition = new Vector3(0, -6.5f, 3.73529f);
+            Quaternion orientation;
+            if(direction.Y == 1)
+                orientation = Quaternion.Identity;
+            else if(direction.Y == -1)
+                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
+            else if(direction.X == 1)
+                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, -MathHelper.PiOver2);
+            else
+                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.PiOver2);
+            // house.Ent.Orientation = orientation;
+            door.Ent.Orientation = orientation;
+            return new Building(house, new[] { new Door(door, new Vector3(direction, 0)) });
         }
 
         public void Start()
@@ -685,6 +764,7 @@ namespace LD28
                 GameManager.Space.Add(a);
             }
             GameManager.Space.Add(Player);
+            RenderingDevice.Add(Player);
             Player.Activate();
         }
 
@@ -696,6 +776,7 @@ namespace LD28
                 GameManager.Space.Remove(a);
             }
             GameManager.Space.Remove(Player);
+            RenderingDevice.Remove(Player);
             actorList.Clear();
             Player.Deactivate();
             createActors();

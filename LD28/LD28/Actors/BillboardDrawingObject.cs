@@ -14,6 +14,8 @@ namespace LD28
         private Texture2D[] textures;
         private List<Vector3> positions;
 
+        public Vector3 Position { get { return positions[0]; } }
+
         public BillboardDrawingObject(Vector3 position, Texture2D texture, Vector2 dim, EffectDelegate effect)
             :this(new[] { position }, texture, dim, effect)
         { }

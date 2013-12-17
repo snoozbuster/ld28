@@ -11,9 +11,9 @@ FBXHeaderExtension:  {
 		Year: 2013
 		Month: 12
 		Day: 16
-		Hour: 10
-		Minute: 40
-		Second: 08
+		Hour: 17
+		Minute: 16
+		Second: 41
 		Millisecond: 0
 	}
 	Creator: "FBX SDK/FBX Plugins build 20070228"
@@ -21,7 +21,7 @@ FBXHeaderExtension:  {
 		FlagPLE: 0
 	}
 }
-CreationTime: "2013-12-16 10:40:08:000"
+CreationTime: "2013-12-16 17:16:41:000"
 Creator: "Blender version 2.68 (sub 0)"
 
 ; Object definitions
@@ -609,7 +609,7 @@ Objects:  {
 			Property: "LastFrame", "int", "",0
 			Property: "Width", "int", "",0
 			Property: "Height", "int", "",0
-			Property: "Path", "charptr", "", "../textures/apartment_map.png"
+			Property: "Path", "charptr", "", "../textures/../textures/apartment_map.png"
 			Property: "StartFrame", "int", "",0
 			Property: "StopFrame", "int", "",0
 			Property: "PlaySpeed", "double", "",1
@@ -620,8 +620,8 @@ Objects:  {
 			Property: "AccessMode", "enum", "",0
 		}
 		UseMipMap: 0
-		Filename: "../textures/apartment_map.png"
-		RelativeFilename: "../textures/apartment_map.png"
+		Filename: "../textures/../textures/apartment_map.png"
+		RelativeFilename: "../textures/../textures/apartment_map.png"
 	}
 	Video: "Video::apartment_map_png", "Clip" {
 		Type: "Clip"
@@ -630,7 +630,7 @@ Objects:  {
 			Property: "LastFrame", "int", "",0
 			Property: "Width", "int", "",0
 			Property: "Height", "int", "",0
-			Property: "Path", "charptr", "", "../textures/apartment_map.png"
+			Property: "Path", "charptr", "", "../textures/../textures/apartment_map.png"
 			Property: "StartFrame", "int", "",0
 			Property: "StopFrame", "int", "",0
 			Property: "PlaySpeed", "double", "",1
@@ -641,8 +641,8 @@ Objects:  {
 			Property: "AccessMode", "enum", "",0
 		}
 		UseMipMap: 0
-		Filename: "../textures/apartment_map.png"
-		RelativeFilename: "../textures/apartment_map.png"
+		Filename: "../textures/../textures/apartment_map.png"
+		RelativeFilename: "../textures/../textures/apartment_map.png"
 	}
 	Texture: "Texture::Untitled_001", "TextureVideoClip" {
 		Type: "TextureVideoClip"
@@ -666,8 +666,8 @@ Objects:  {
 			Property: "VideoProperty", "object", ""
 		}
 		Media: "Video::Untitled_001"
-		FileName: "../textures/apartment_map.png"
-		RelativeFilename: "../textures/apartment_map.png"
+		FileName: "../textures/../textures/apartment_map.png"
+		RelativeFilename: "../textures/../textures/apartment_map.png"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "None"
@@ -695,8 +695,8 @@ Objects:  {
 			Property: "VideoProperty", "object", ""
 		}
 		Media: "Video::apartment_map_png"
-		FileName: "../textures/apartment_map.png"
-		RelativeFilename: "../textures/apartment_map.png"
+		FileName: "../textures/../textures/apartment_map.png"
+		RelativeFilename: "../textures/../textures/apartment_map.png"
 		ModelUVTranslation: 0,0
 		ModelUVScaling: 1,1
 		Texture_Alpha_Source: "None"

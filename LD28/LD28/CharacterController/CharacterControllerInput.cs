@@ -246,6 +246,9 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
                 //Jumping
                 if (Input.CheckKeyboardJustPressed(Keys.Space))
                     CharacterController.Jump();
+
+                // rotate
+                //CharacterController.Body.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, Camera.Pitch);
 #endif
 
             }

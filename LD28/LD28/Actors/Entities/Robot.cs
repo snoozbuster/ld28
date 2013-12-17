@@ -13,8 +13,6 @@ namespace LD28
         protected float attackDistance;
         protected float baseDamage;
 
-        protected BaseModel model { get { return (DrawingObject as ModelDrawingObject).Model; } }
-
         public Robot(BaseModel model, float detection, float attack, float damage, float health)
             :base(model.Ent, new ModelDrawingObject(model), health)
         {
@@ -23,6 +21,7 @@ namespace LD28
             baseDamage = damage;
 
             unlockFromWorld();
+            model.Ent.IsAffectedByGravity = false;
         }
 
         protected override void onDeath(Actor killer)
@@ -30,6 +29,7 @@ namespace LD28
             // don't vanish on death, just fall to the ground and lie there
             Inactive = true;
             Player player = killer as Player;
+            PhysicsObject.IsAffectedByGravity = true;
             if(player != null)
             {
                 player.TakeMorality(MathHelper.Clamp((float)random.NextDouble(), 0.1f, 0.5f));
@@ -40,7 +40,7 @@ namespace LD28
         public override void Update(GameTime gameTime)
         {
             Player player = Program.Game.Player;
-            if(Inactive || Vector3.Distance(model.Ent.Position, player.PhysicsObject.Position) > detectionDistance)
+            if(Inactive || Vector3.Distance(PhysicsObject.Position, player.PhysicsObject.Position) > detectionDistance)
                 return;
             // todo: pathfinding and attacking
         }

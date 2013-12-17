@@ -1,4 +1,5 @@
 ﻿using Accelerated_Delivery_Win;
+using Microsoft.Xna.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,6 +10,7 @@ namespace LD28
     class ModelDrawingObject : IDrawableObject
     {
         public BaseModel Model { get; private set; }
+        public Vector3 Position { get { return Model.Ent.Position; } }
 
         public ModelDrawingObject(BaseModel model)
         {

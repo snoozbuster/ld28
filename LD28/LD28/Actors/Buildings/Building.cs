@@ -22,10 +22,29 @@ namespace LD28
         protected override void onDeath(Actor killer) { } // do nothing
         public override void Draw() { } // do nothing
 
-        public Building(BaseModel model)
+        protected Door[] doors;
+        protected BuildingInterior interior;
+
+        public Building(BaseModel model, Door[] doors = null, BuildingInterior interior = null)
             : base(model.Ent, new ModelDrawingObject(model), float.PositiveInfinity)
         {
             PhysicsObject.CollisionInformation.CollisionRules.Group = staticObjects;
+            this.doors = doors;
+            this.interior = interior;
+        }
+
+        public List<Actor> GetActors()
+        {
+            if(doors == null)
+                return new List<Actor>();
+
+            List<Actor> output = new List<Actor>(doors);
+            if(interior != null)
+            {
+                output.AddRange(interior.GetActors());
+                output.Add(interior);
+            }
+            return output;
         }
     }
 }

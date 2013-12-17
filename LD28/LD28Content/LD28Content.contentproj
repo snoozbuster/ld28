@@ -66,6 +66,7 @@
       <Name>press_start</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -73,6 +74,7 @@
       <Name>buttons</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -92,16 +94,19 @@
       <Name>background</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="textures\loading.png">
       <Name>loading</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="textures\logo.png">
       <Name>logo</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -136,53 +141,29 @@
       <Name>rock</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="textures\tallgrass.png">
       <Name>tallgrass</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="textures\tree.png">
       <Name>tree</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="models\apartment_inside_left.fbx">
-      <Name>apartment_inside_left</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>NormalMappingModelProcessor</Processor>
-      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-    </Compile>
-    <Compile Include="models\apartment_inside_right.fbx">
-      <Name>apartment_inside_right</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>NormalMappingModelProcessor</Processor>
-      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-    </Compile>
-    <Compile Include="models\apartment_nodoors.fbx">
-      <Name>apartment_nodoors</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>NormalMappingModelProcessor</Processor>
-      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-    </Compile>
-    <Compile Include="models\apartment_withdoors.fbx">
-      <Name>apartment_withdoors</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>NormalMappingModelProcessor</Processor>
-      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-    </Compile>
     <Compile Include="models\door.fbx">
       <Name>door</Name>
       <Importer>FbxImporter</Importer>
       <Processor>NormalMappingModelProcessor</Processor>
       <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="models\ground.fbx">
       <Name>ground</Name>
@@ -190,13 +171,7 @@
       <Processor>NormalMappingModelProcessor</Processor>
       <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-    </Compile>
-    <Compile Include="models\house.fbx">
-      <Name>house</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>NormalMappingModelProcessor</Processor>
-      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="models\police.fbx">
       <Name>police</Name>
@@ -204,13 +179,7 @@
       <Processor>NormalMappingModelProcessor</Processor>
       <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-    </Compile>
-    <Compile Include="models\skyscraper.fbx">
-      <Name>skyscraper</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>NormalMappingModelProcessor</Processor>
-      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
     <Compile Include="models\trees.fbx">
       <Name>trees</Name>
@@ -218,6 +187,7 @@
       <Processor>NormalMappingModelProcessor</Processor>
       <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -227,13 +197,7 @@
       <Processor>NormalMappingModelProcessor</Processor>
       <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
-    </Compile>
-    <Compile Include="models\warehouse_interior.fbx">
-      <Name>warehouse_interior</Name>
-      <Importer>FbxImporter</Importer>
-      <Processor>NormalMappingModelProcessor</Processor>
-      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
-      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
     </Compile>
   </ItemGroup>
   <ItemGroup>
@@ -250,6 +214,123 @@
       <Processor>NormalMappingModelProcessor</Processor>
       <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
       <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="models\apartments.fbx">
+      <Name>apartments</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
+    </Compile>
+    <Compile Include="models\houses.fbx">
+      <Name>houses</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
+    </Compile>
+    <Compile Include="models\skyscrapers.fbx">
+      <Name>skyscrapers</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="models\sword.fbx">
+      <Name>sword</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+      <ProcessorParameters_TextureFormat>NoChange</ProcessorParameters_TextureFormat>
+      <ProcessorParameters_RotationX>90</ProcessorParameters_RotationX>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="music\main.wav">
+      <Name>main</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="textures\people\bodies\char_body1.png">
+      <Name>char_body1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\bodies\char_body2.png">
+      <Name>char_body2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\bodies\char_body3.png">
+      <Name>char_body3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\bodies\char_body4.png">
+      <Name>char_body4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\bodies\char_body5.png">
+      <Name>char_body5</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\bodies\char_body6.png">
+      <Name>char_body6</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\char_crazyman.png">
+      <Name>char_crazyman</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\char_evildude.png">
+      <Name>char_evildude</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\heads\char_head1.png">
+      <Name>char_head1</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\heads\char_head2.png">
+      <Name>char_head2</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\heads\char_head3.png">
+      <Name>char_head3</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\heads\char_head4.png">
+      <Name>char_head4</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\heads\char_head5.png">
+      <Name>char_head5</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+    <Compile Include="textures\people\heads\char_head6.png">
+      <Name>char_head6</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />
