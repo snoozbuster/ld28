@@ -12,9 +12,9 @@ namespace LD28
     {
         protected bool moralityDecrease;
 
-        public Nature(Vector3 position, Texture2D image, float health, bool moralityDecrease = true)
-            :base(new Box(position, image.Width, image.Height, image.Width),
-                  new BillboardDrawingObject(position, image, delegate { return Program.Game.Loader.BillboardEffect; }), health)
+        public Nature(Vector3 position, Texture2D image, Vector2 dim, float health, bool moralityDecrease = true)
+            : base(new Box(position, dim.X, dim.X, dim.Y),
+                  new BillboardDrawingObject(position, image, dim, delegate { return Program.Game.Loader.BillboardEffect; }), health)
         {
             this.moralityDecrease = moralityDecrease;
         }

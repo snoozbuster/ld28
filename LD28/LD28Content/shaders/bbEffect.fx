@@ -4,6 +4,7 @@ float4x4 xProjection;
 float4x4 xWorld;
 float3 xCamPos;
 float3 xAllowedRotDir;
+float2 dim;
 
 //------- Texture Samplers --------
 Texture xBillboardTexture;
@@ -30,8 +31,8 @@ BBVertexToPixel CylBillboardVS(float3 inPos: POSITION0, float2 inTexCoord: TEXCO
 	sideVector = normalize(sideVector);
 	
 	float3 finalPosition = center;
-	finalPosition += (inTexCoord.x*3.0f-1.5f)*sideVector;
-	finalPosition += (1.5f-inTexCoord.y*3.0f)*upVector;	
+	finalPosition += (inTexCoord.x*dim.x-dim.x/2)*sideVector;
+	finalPosition += (dim.y/2-inTexCoord.y*dim.y)*upVector;	
 	
 	float4 finalPosition4 = float4(finalPosition, 1);
 		

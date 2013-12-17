@@ -19,8 +19,8 @@ namespace LD28
         protected bool canTalk = true;
 
         public Person(Vector3 position, Texture2D personTex, string text, float talkDistance, string name, float health)
-            : base(new Box(position, personTex.Width, personTex.Height, personTex.Width),
-                   new BillboardDrawingObject(position, personTex, delegate { return Program.Game.Loader.BillboardEffect; }), 
+            : base(new Box(position, 1.5f, 1.5f, 4),
+                   new BillboardDrawingObject(position, personTex, new Vector2(1.5f, 4), delegate { return Program.Game.Loader.BillboardEffect; }), 
                    health)
         {
             this.text = text;

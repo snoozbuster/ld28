@@ -33,6 +33,7 @@ namespace LD28
         static Actor()
         {
             CollisionGroup.DefineCollisionRule(staticObjects, staticObjects, CollisionRule.NoBroadPhase);
+            CollisionGroup.DefineCollisionRule(staticObjects, dynamicObjects, CollisionRule.Normal);
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace LD28
 
         public Actor(Entity entity, IDrawableObject drawing, float health)
         {
-            if(entity.Space != null)
+            if(entity != null && entity.Space != null)
                 throw new ArgumentException("This physics object already belongs to a space.");
 
             PhysicsObject = entity;
@@ -59,9 +60,9 @@ namespace LD28
                 baseJoint = new WeldJoint(null, PhysicsObject);
                 baseJoint.IsActive = true;
                 PhysicsObject.CollisionInformation.CollisionRules.Group = staticObjects;
-            }
 
-            PhysicsObject.Tag = this;
+                PhysicsObject.Tag = this;
+            }
         }
 
         public virtual void Damage(float amount, Actor attacker)
@@ -92,7 +93,7 @@ namespace LD28
         protected virtual void onDeath(Actor killer) 
         { 
             Inactive = true; 
-            space.Remove(this); 
+            Space.Remove(this); 
             RenderingDevice.Remove(this); 
         }
 
@@ -108,7 +109,7 @@ namespace LD28
 
             PhysicsObject.CollisionInformation.CollisionRules.Group = dynamicObjects;
             if(baseJoint.Solver != null)
-                space.Remove(baseJoint);
+                Space.Remove(baseJoint);
             baseJoint = null;
         }
 
@@ -136,17 +137,7 @@ namespace LD28
                 oldSpace.Remove(baseJoint);
         }
 
-        protected ISpace space;
-        public ISpace Space
-        {
-            get { return space; }
-            set 
-            { 
-                if(value == null) return; 
-                if(space != null) OnRemovalFromSpace(space); 
-                OnAdditionToSpace(value); space = value; 
-            }
-        }
+        public ISpace Space { get; set; }
 
         public object Tag { get; set; }
     }
@@ -177,7 +168,7 @@ namespace LD28
             KeyboardState keyboard = Input.KeyboardState;
             Keys[] pressedKeys = keyboard.GetPressedKeys();
             Keys key;
-            if((key = pressedKeys.First(v => { return v != Keys.LeftShift && v != Keys.RightShift && v != Keys.RightAlt && v != Keys.LeftAlt && v != Keys.RightControl && v != Keys.LeftControl && v != Keys.None; })) != 0)
+            if((key = pressedKeys.FirstOrDefault(v => { return v != Keys.LeftShift && v != Keys.RightShift && v != Keys.RightAlt && v != Keys.LeftAlt && v != Keys.RightControl && v != Keys.LeftControl && v != Keys.None; })) != 0)
                 return new KeypressEventArgs(sender, key,
                     Vector3.Distance(sender.PhysicsObject.Position, target.PhysicsObject.Position),
                     pressedKeys.Any(v => { return v == Keys.LeftShift || v == Keys.RightShift; }),

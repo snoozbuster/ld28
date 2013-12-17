@@ -28,6 +28,9 @@
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.XImporter, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.AudioImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
     <Reference Include="Microsoft.Xna.Framework.Content.Pipeline.VideoImporters, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=MSIL" />
+    <Reference Include="NormalMappingEffectPipeline">
+      <HintPath>..\..\..\..\Tutorials\NormalMappingSample_4_0\NormalMappingEffectPipeline\bin\x86\Debug\NormalMappingEffectPipeline.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="shaders\bbEffect.fx">
@@ -149,64 +152,104 @@
     <Compile Include="models\apartment_inside_left.fbx">
       <Name>apartment_inside_left</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\apartment_inside_right.fbx">
       <Name>apartment_inside_right</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\apartment_nodoors.fbx">
       <Name>apartment_nodoors</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\apartment_withdoors.fbx">
       <Name>apartment_withdoors</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\door.fbx">
       <Name>door</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\ground.fbx">
       <Name>ground</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\house.fbx">
       <Name>house</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\police.fbx">
       <Name>police</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\skyscraper.fbx">
       <Name>skyscraper</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\trees.fbx">
       <Name>trees</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="models\warehouse.fbx">
       <Name>warehouse</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
     <Compile Include="models\warehouse_interior.fbx">
       <Name>warehouse_interior</Name>
       <Importer>FbxImporter</Importer>
-      <Processor>ModelProcessor</Processor>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="music\sfx\Pause_Jingle.wav">
+      <Name>Pause_Jingle</Name>
+      <Importer>WavImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="models\skybox.fbx">
+      <Name>skybox</Name>
+      <Importer>FbxImporter</Importer>
+      <Processor>NormalMappingModelProcessor</Processor>
+      <ProcessorParameters_PassThroughLighting>True</ProcessorParameters_PassThroughLighting>
+      <ProcessorParameters_GenerateMipmaps>False</ProcessorParameters_GenerateMipmaps>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

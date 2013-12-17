@@ -3,19 +3,33 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LD28", "LD28\LD28\LD28.csproj", "{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}"
 EndProject
-Project("{96E2B04D-8817-42C6-938A-82C39BA4D311}") = "LD28Content", "LD28\LD28Content\LD28Content.contentproj", "{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LD28Content", "LD28\LD28Content\LD28Content.contentproj", "{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Debug|Mixed Platforms = Debug|Mixed Platforms
 		Debug|x86 = Debug|x86
+		Release|Any CPU = Release|Any CPU
+		Release|Mixed Platforms = Release|Mixed Platforms
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
+		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Debug|Mixed Platforms.Build.0 = Debug|x86
 		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Debug|x86.ActiveCfg = Debug|x86
 		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Debug|x86.Build.0 = Debug|x86
+		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Release|Any CPU.ActiveCfg = Release|x86
+		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Release|Mixed Platforms.ActiveCfg = Release|x86
+		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Release|Mixed Platforms.Build.0 = Release|x86
 		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Release|x86.ActiveCfg = Release|x86
 		{ABD3ADE4-C97E-4AAD-B1AE-63FC12836A62}.Release|x86.Build.0 = Release|x86
+		{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
 		{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}.Debug|x86.ActiveCfg = Debug|x86
+		{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}.Release|Any CPU.ActiveCfg = Release|x86
+		{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}.Release|Mixed Platforms.ActiveCfg = Release|x86
 		{8DF9C554-AABC-4C16-BA94-8F66E0E2502A}.Release|x86.ActiveCfg = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution

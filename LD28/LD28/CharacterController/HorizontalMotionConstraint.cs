@@ -330,7 +330,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
                     //This projection is NOT along the support normal to the plane; that would cause the character to veer off course when moving on slopes.
                     //Instead, project along the sweep direction to the plane.
                     //For a 6DOF character controller, the lineStart would be different; it must be perpendicular to the local up.
-                    Vector3 lineStart = new Vector3(movementDirection.X, 0, movementDirection.Y);
+                    Vector3 lineStart = new Vector3(movementDirection.X, movementDirection.Y, 0);
                     Vector3 lineEnd;
                     Vector3.Add(ref lineStart, ref downDirection, out lineEnd);
                     Plane plane = new Plane(character.SupportFinder.HasTraction ? supportData.Normal : supportData.Normal, 0);
@@ -417,8 +417,8 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
                 //Note that in a 6DOF character, this will change- but it will still be trivial.
                 //In that case, the movement direction will be a 3d vector, and the A2 jacobian will just be
                 //linearJacobianA1 x downDirection.
-                linearJacobianA1 = new Vector3(movementDirection.X, 0, movementDirection.Y);
-                linearJacobianA2 = new Vector3(movementDirection.Y, 0, -movementDirection.X);
+                linearJacobianA1 = new Vector3(movementDirection.X, movementDirection.Y, 0);
+                linearJacobianA2 = new Vector3(movementDirection.Y, -movementDirection.X, 0);
 
 
             }

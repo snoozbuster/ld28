@@ -43,10 +43,10 @@ namespace LD28
             set
             {
                 pitch = value;
-                if (pitch > MathHelper.PiOver2 * .99f)
-                    pitch = MathHelper.PiOver2 * .99f;
-                else if (pitch < -MathHelper.PiOver2 * .99f)
-                    pitch = -MathHelper.PiOver2 * .99f;
+                if(pitch > -0.3f)
+                    pitch = -0.3f;
+                else if(pitch < -MathHelper.Pi * .95f)
+                    pitch = -MathHelper.Pi * .95f;
             }
         }
 
@@ -140,10 +140,10 @@ namespace LD28
         /// <param name="projMatrix">Projection matrix used.</param>
         public CharacterCamera()
         {
-            Position = Vector3.Zero;
+            Position = new Vector3(-1, -16, 6);
             Speed = 10;
             Yaw = 0;
-            Pitch = 0;
+            Pitch = MathHelper.PiOver2;
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)Program.Game.Graphics.PreferredBackBufferWidth / Program.Game.Graphics.PreferredBackBufferHeight, .1f, 10000);
 
             rayCastFilter = RayCastFilter;
@@ -179,7 +179,7 @@ namespace LD28
         /// <param name="distance">Distanec to move.</param>
         public void MoveUp(float distance)
         {
-            Position += new Vector3(0, distance, 0);
+            Position += new Vector3(0, 0, distance);
         }
 
         /// <summary>
@@ -190,8 +190,8 @@ namespace LD28
         {
             if(Input.ControlScheme == ControlScheme.Keyboard)
             {
-                Yaw += (RenderingDevice.GraphicsDevice.Viewport.Width - Input.MouseState.X) * dt * .12f;
-                Pitch += (RenderingDevice.GraphicsDevice.Viewport.Height - Input.MouseState.Y) * dt * .12f;
+                Yaw += (RenderingDevice.GraphicsDevice.Viewport.Width / 2 - Input.MouseState.X) * dt * .12f;
+                Pitch += (Input.MouseState.Y - RenderingDevice.GraphicsDevice.Viewport.Height / 2) * dt * .12f;
             }
             else if(Input.ControlScheme == ControlScheme.XboxController)
             {
@@ -200,7 +200,7 @@ namespace LD28
                 Pitch += Input.CurrentPad.ThumbSticks.Right.Y * 1.5f * dt;
             }
 
-            World = Matrix.CreateFromAxisAngle(Vector3.Right, Pitch) * Matrix.CreateFromAxisAngle(Vector3.Up, Yaw);
+            World = Matrix.CreateFromAxisAngle(-Vector3.UnitX, Pitch) * Matrix.CreateFromAxisAngle(Vector3.UnitZ, Yaw);
 
             if (isChaseCameraMode)
             {
@@ -252,15 +252,20 @@ namespace LD28
                 }
             }
 
+#if DEBUG
+            if(Input.CheckKeyboardJustPressed(Keys.P))
+                debugCamera = !debugCamera;
+#endif
+
             World = World * Matrix.CreateTranslation(Position);
-            View = Matrix.Invert(World);
+            View = Matrix.Invert(World);            
         }
 
         public void Reset() { throw new NotImplementedException(); }
 
         public Matrix Rotation
         {
-            get { return Matrix.CreateFromYawPitchRoll(Yaw, Pitch, 0); }
+            get { return Matrix.CreateFromYawPitchRoll(Pitch, 0, Yaw); }
         }
 
         public void SetForResultsScreen() { throw new NotImplementedException("And it won't be either"); }
@@ -275,5 +280,7 @@ namespace LD28
         public Matrix WorldViewProj { get { return World * View * Projection; } }
 
         public float Zoom { get; set; }
+
+        public bool debugCamera { get; private set; }
     }
 }

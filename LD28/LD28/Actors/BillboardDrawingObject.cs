@@ -14,11 +14,11 @@ namespace LD28
         private Texture2D[] textures;
         private List<Vector3> positions;
 
-        public BillboardDrawingObject(Vector3 position, Texture2D texture, EffectDelegate effect)
-            :this(new[] { position }, texture, effect)
+        public BillboardDrawingObject(Vector3 position, Texture2D texture, Vector2 dim, EffectDelegate effect)
+            :this(new[] { position }, texture, dim, effect)
         { }
 
-        public BillboardDrawingObject(Vector3[] positions, Texture2D texture, EffectDelegate effect)
+        public BillboardDrawingObject(Vector3[] positions, Texture2D texture, Vector2 dim, EffectDelegate effect)
         {
             billboard = new Billboard(effect);
             textures = new Texture2D[positions.Length];
@@ -26,7 +26,7 @@ namespace LD28
                 textures[i] = texture;
             this.positions = new List<Vector3>(positions);
 
-            billboard.CreateBillboardVerticesFromList(this.positions);
+            billboard.CreateBillboardVerticesFromList(this.positions, dim);
         }
 
         public void Draw()

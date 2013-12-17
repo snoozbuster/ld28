@@ -56,9 +56,9 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
         /// </summary>
         /// <param name="owningSpace">Space to add the character to.</param>
         /// <param name="CameraToUse">Camera to attach to the character.</param>
-        public CharacterControllerInput(Space owningSpace, CharacterCamera CameraToUse)
+        public CharacterControllerInput(Space owningSpace, CharacterCamera CameraToUse, Vector3 position)
         {
-            CharacterController = new CharacterController();
+            CharacterController = new CharacterController(position);
 
             Space = owningSpace;
             Space.Add(CharacterController);
@@ -78,7 +78,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
                 IsActive = true;
                 Camera.UseMovementControls = false;
                 Space.Add(CharacterController);
-                CharacterController.Body.Position = (Camera.Position - new Vector3(0, StandingCameraOffset, 0));
+                CharacterController.Body.Position = (Camera.Position - new Vector3(0, 0, StandingCameraOffset));
             }
         }
 
@@ -245,9 +245,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
 
                 //Jumping
                 if (Input.CheckKeyboardJustPressed(Keys.Space))
-                {
                     CharacterController.Jump();
-                }
 #endif
 
             }

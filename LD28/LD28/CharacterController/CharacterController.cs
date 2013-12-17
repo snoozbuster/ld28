@@ -116,9 +116,9 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
         /// <summary>
         /// Constructs a new character controller with the default configuration.
         /// </summary>
-        public CharacterController()
+        public CharacterController(Vector3 position)
         {
-            Body = new Cylinder(Vector3.Zero, 1.7f, .6f, 10);
+            Body = new Cylinder(position, 3.5f, .75f, 10);
             Body.IgnoreShapeChanges = true; //Wouldn't want inertia tensor recomputations to occur when crouching and such.
             Body.CollisionInformation.Shape.CollisionMargin = .1f;
             //Making the character a continuous object prevents it from flying through walls which would be pretty jarring from a player's perspective.
@@ -165,8 +165,8 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
             Vector3 offset = new Vector3();
 #endif
                 offset.X = radius;
-                offset.Y = StepManager.MaximumStepHeight;
-                offset.Z = radius;
+                offset.Y = radius;
+                offset.Z = StepManager.MaximumStepHeight;
                 BoundingBox box = Body.CollisionInformation.BoundingBox;
                 Vector3.Add(ref box.Max, ref offset, out box.Max);
                 Vector3.Subtract(ref box.Min, ref offset, out box.Min);
@@ -316,7 +316,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
             //Vertical support data is different because it has the capacity to stop the character from moving unless
             //contacts are pruned appropriately.
             SupportData verticalSupportData;
-            Vector3 movement3d = new Vector3(HorizontalMotionConstraint.MovementDirection.X, 0, HorizontalMotionConstraint.MovementDirection.Y);
+            Vector3 movement3d = new Vector3(HorizontalMotionConstraint.MovementDirection.X, HorizontalMotionConstraint.MovementDirection.Y, 0);
             SupportFinder.GetTractionInDirection(ref movement3d, out verticalSupportData);
             VerticalMotionConstraint.SupportData = verticalSupportData;
 

@@ -11,6 +11,7 @@ using System.Text;
 
 namespace LD28
 {
+    // also used for terrain
     public class Building : Actor
     {
         public override void Heal(float amount) { } // do nothing
@@ -24,7 +25,7 @@ namespace LD28
         public Building(BaseModel model)
             : base(model.Ent, new ModelDrawingObject(model), float.PositiveInfinity)
         {
-
+            PhysicsObject.CollisionInformation.CollisionRules.Group = staticObjects;
         }
     }
 }

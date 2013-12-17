@@ -29,6 +29,10 @@ namespace LD28
         public Texture2D mainMenuLogo;
         public Texture2D mainMenuBackground;
         public Sprite[] Credits; // empty
+
+        public Texture2D TreeTexture;
+        public Texture2D RockTexture;
+        public Texture2D GrassTexture;
         #endregion
 
         #region Buttons
@@ -53,6 +57,12 @@ namespace LD28
         public Video bad_end; // empty
         #endregion
 
+        #region Models
+        public Model Ground;
+        public Model Trees;
+        public Model Skydome;
+        #endregion
+
         public Loader(ContentManager content)
         {
             this.content = content;
@@ -60,7 +70,7 @@ namespace LD28
 
         public IEnumerator<float> GetEnumerator()
         {
-            totalItems = 2 + 6 + 2;
+            totalItems = 2 + 9 + 3 + 2;
 
             #region Shaders
             BillboardEffect = content.Load<Effect>("shaders/bbEffect");
@@ -92,6 +102,22 @@ namespace LD28
             mainMenuBackground = content.Load<Texture2D>("textures/background");
             yield return progress();
             mainMenuLogo = content.Load<Texture2D>("textures/logo");
+            yield return progress();
+
+            TreeTexture = content.Load<Texture2D>("textures/tree");
+            yield return progress();
+            GrassTexture = content.Load<Texture2D>("textures/tallgrass");
+            yield return progress();
+            RockTexture = content.Load<Texture2D>("textures/rock");
+            yield return progress();
+            #endregion
+
+            #region Models
+            Ground = content.Load<Model>("models/ground");
+            yield return progress();
+            Trees = content.Load<Model>("models/trees");
+            yield return progress();
+            Skydome = content.Load<Model>("models/skybox");
             yield return progress();
             #endregion
 

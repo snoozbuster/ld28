@@ -22,8 +22,9 @@ namespace LD28
         public Player()
             : base(null, null, 100)
         {
-            character = new CharacterControllerInput(GameManager.Space, RenderingDevice.Camera as CharacterCamera);
+            character = new CharacterControllerInput(GameManager.Space, RenderingDevice.Camera as CharacterCamera, new Vector3(-1, -16, 6));
             character.CharacterController.Body.Tag = this;
+            character.CharacterController.Body.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.PiOver2);
             PhysicsObject = character.CharacterController.Body; // for posterity
             PhysicsObject.CollisionInformation.CollisionRules.Group = dynamicObjects; // also for posterity
 
@@ -46,11 +47,13 @@ namespace LD28
                 if(GameManager.Space.RayCast(new Ray(startPosition, RenderingDevice.Camera.World.Forward), 5, rayCastFilter, out raycastResult))
                 {
                     var actorCollision = raycastResult.HitObject.Tag as Actor;
-                    // If there's a valid ray hit, then ping the connected object!
-                    KeypressEventArgs args = KeypressEventArgs.FromCurrentInput(Program.Game.Player, actorCollision);
-                    if(args != null)
-                        // I'm doing this all backwards.
-                        actorCollision.DoEvent(args);
+                    if(actorCollision != null)
+                    {
+                        KeypressEventArgs args = KeypressEventArgs.FromCurrentInput(Program.Game.Player, actorCollision);
+                        if(args != null)
+                            // I'm doing this all backwards.
+                            actorCollision.DoEvent(args);
+                    }
                 }
                 
                 // todo: sword swinging
@@ -85,14 +88,12 @@ namespace LD28
 
         public override void OnAdditionToSpace(BEPUphysics.ISpace newSpace)
         {
-            base.OnAdditionToSpace(newSpace);
-            newSpace.Add(character.CharacterController);
+            //newSpace.Add(character.CharacterController);
         }
 
         public override void OnRemovalFromSpace(BEPUphysics.ISpace oldSpace)
         {
-            base.OnRemovalFromSpace(oldSpace);
-            oldSpace.Remove(character.CharacterController);
+            //oldSpace.Remove(character.CharacterController);
         }
 
         protected override void onDeath(Actor killer)

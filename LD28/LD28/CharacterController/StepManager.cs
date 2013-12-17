@@ -323,7 +323,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
                 Vector3 movementDirection = new Vector3()
                 {
                     X = character.HorizontalMotionConstraint.MovementDirection.X,
-                    Z = character.HorizontalMotionConstraint.MovementDirection.Y
+                    Y = character.HorizontalMotionConstraint.MovementDirection.Y
                 };
                 //Check to see if the contact is sufficiently aligned with the movement direction to be considered for stepping.
                 //TODO: This could behave a bit odd when encountering steps or slopes near the base of rounded collision margin.
