@@ -45,7 +45,11 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="video\" />
+    <Compile Include="music\main.wma">
+      <Name>main</Name>
+      <Importer>WmaImporter</Importer>
+      <Processor>SoundEffectProcessor</Processor>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="font\font.spritefont">
@@ -255,13 +259,6 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="music\main.wav">
-      <Name>main</Name>
-      <Importer>WavImporter</Importer>
-      <Processor>SoundEffectProcessor</Processor>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
     <Compile Include="textures\people\bodies\char_body1.png">
       <Name>char_body1</Name>
       <Importer>TextureImporter</Importer>
@@ -331,6 +328,37 @@
       <Name>char_head6</Name>
       <Importer>TextureImporter</Importer>
       <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="font\CrashFont.spritefont">
+      <Name>CrashFont</Name>
+      <Importer>FontDescriptionImporter</Importer>
+      <Processor>FontDescriptionProcessor</Processor>
+    </Compile>
+    <None Include="text\sayings.txt">
+      <Name>sayings</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="text\names.txt">
+      <Name>names</Name>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="textures\evidence.png">
+      <Name>evidence</Name>
+      <Importer>TextureImporter</Importer>
+      <Processor>TextureProcessor</Processor>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="video\good.wmv">
+      <Name>good</Name>
+      <Importer>WmvImporter</Importer>
+      <Processor>VideoProcessor</Processor>
     </Compile>
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\Microsoft\XNA Game Studio\$(XnaFrameworkVersion)\Microsoft.Xna.GameStudio.ContentPipeline.targets" />

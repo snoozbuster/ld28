@@ -48,9 +48,7 @@ sampler TextureSampler =
 	sampler_state 
 	{ 
 		texture = <Texture>; 
-		magfilter = LINEAR; 
-		minfilter = LINEAR; 
-		mipfilter = LINEAR; 
+		minfilter = Point; magfilter = Point; mipfilter=None;
 		AddressU = mirror; 
 		AddressV = mirror;
 	};
@@ -59,9 +57,7 @@ sampler NormalSampler =
 	sampler_state 
 	{ 
 		texture = <xNormalTexture>; 
-		magfilter = LINEAR; 
-		minfilter = LINEAR; 
-		mipfilter = LINEAR; 
+		 minfilter = Point; magfilter = Point; mipfilter=None;
 		AddressU = mirror; 
 		AddressV = mirror;
 	};

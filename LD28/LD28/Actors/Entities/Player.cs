@@ -15,6 +15,8 @@ using Microsoft.Xna.Framework.Input;
 using BEPUphysics.Collidables.MobileCollidables;
 using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUphysics.Collidables;
+using BEPUphysics.MathExtensions;
+using BEPUphysicsDemos.SampleCode;
 
 namespace LD28
 {
@@ -28,8 +30,12 @@ namespace LD28
 
         protected BaseModel sword;
         protected bool swinging;
-        protected RevoluteJoint swordJoint;
+        protected bool hitThisSwing;
+        protected Quaternion swingQuat = Quaternion.Identity;
         protected float timing = 0;
+        protected float baseDamage = 0.4f;
+
+        protected MotorizedGrabSpring swordgrabber;
 
         public Player()
             : base(null, null, 100)
@@ -42,17 +48,12 @@ namespace LD28
 
             rayCastFilter = RayCastFilter;
 
-            sword = new BaseModel(delegate { return Program.Game.Loader.SwordModel; }, false, true, new Vector3(0, -14, 6.5f));
-            //sword.Ent.CollisionInformation.LocalPosition = new Vector3(0, -2, 0);
-            swordJoint = new RevoluteJoint(PhysicsObject, sword.Ent, sword.ModelPosition - Vector3.UnitZ, Vector3.UnitX);
-            swordJoint.Limit.IsActive = true;
-            swordJoint.Limit.MinimumAngle = -MathHelper.PiOver2;
-            swordJoint.Limit.MaximumAngle = 0;
-            swordJoint.Motor.IsActive = true;
-            swordJoint.Motor.Settings.Mode = MotorMode.Servomechanism;
-            swordJoint.Motor.Settings.Servo.Goal = 0;
-            swordJoint.IsActive = true;
-
+            sword = new BaseModel(delegate { return Program.Game.Loader.SwordModel; }, false, true, new Vector3(0.5f, -15, 4.2f));
+            CollisionRules.AddRule(sword.Ent, PhysicsObject, CollisionRule.NoBroadPhase);
+            sword.Ent.CollisionInformation.LocalPosition = new Vector3(0, -1, 0);
+            sword.Ent.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, -MathHelper.PiOver2);
+            swordgrabber = new MotorizedGrabSpring();
+            swordgrabber.Setup(sword.Ent, sword.ModelPosition - Vector3.UnitX * 0.5f);
             sword.Ent.CollisionInformation.Events.PairTouching += onCollision;
         }
 
@@ -73,12 +74,12 @@ namespace LD28
             {
                 character.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-                Vector3 startPosition = RenderingDevice.Camera.Position;
+                Vector3 startPosition = RenderingDevice.Camera.Position + RenderingDevice.Camera.World.Forward * 2;
                 RayCastResult raycastResult;
                 if(GameManager.Space.RayCast(new Ray(startPosition, RenderingDevice.Camera.World.Forward), 5, rayCastFilter, out raycastResult))
                 {
-                    var actorCollision = raycastResult.HitObject.Tag as Actor;
-                    if(actorCollision != null)
+                    Actor actorCollision;
+                    if(raycastResult.HitObject is ConvexCollidable && (actorCollision = (raycastResult.HitObject as ConvexCollidable).Entity.Tag as Actor) != null)
                     {
                         KeypressEventArgs args = KeypressEventArgs.FromCurrentInput(Program.Game.Player, actorCollision);
                         if(args != null)
@@ -91,19 +92,35 @@ namespace LD28
                 if(!swinging && timing > 0.5f && Input.MouseState.LeftButton == ButtonState.Pressed)
                 { 
                     swinging = true; 
-                    timing = 0; 
+                    timing = 0;
+                    swingQuat = Quaternion.CreateFromYawPitchRoll(0, -MathHelper.PiOver2, 0);
                 }
-                if(swinging)
+                if(swinging && timing > 0.5f)
                 {
-                    swordJoint.Motor.Settings.Servo.Goal = swordJoint.Limit.MinimumAngle;
-                    if(timing > 0.5f)
-                    {
-                        swinging = false;
-                        timing = 0;
-                        swordJoint.Motor.Settings.Servo.Goal = swordJoint.Limit.MaximumAngle;
-                    }
+                    swinging = false;
+                    timing = 0;
+                    swingQuat = Quaternion.Identity;
+                    hitThisSwing = false;
                 }
-                
+
+                //if(sword.Ent.Space == null)
+                //{
+                //    Matrix newWorld;
+                //    newWorld = Matrix.CreateRotationX(-MathHelper.PiOver2);
+                //    newWorld *= Matrix.CreateTranslation(new Vector3(0.7f, 1.5f, -0.3f));
+                //    newWorld *= Matrix.CreateRotationZ((RenderingDevice.Camera as CharacterCamera).Yaw);
+                //    newWorld *= Matrix.CreateTranslation(RenderingDevice.Camera.Position);
+                //    sword.Transform = newWorld;
+                //}
+                swordgrabber.GoalPosition = RenderingDevice.Camera.Position + RenderingDevice.Camera.World.Forward * 2 - Vector3.UnitZ;
+                swordgrabber.GoalOrientation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, -MathHelper.PiOver2) *
+                    Quaternion.CreateFromYawPitchRoll(-(RenderingDevice.Camera as CharacterCamera).Yaw, 0, 0) *
+                    Quaternion.CreateFromYawPitchRoll(0, -((RenderingDevice.Camera as CharacterCamera).Pitch + MathHelper.PiOver2), 0) * swingQuat;
+
+#if DEBUG
+                if(Input.CheckKeyboardJustPressed(Keys.E))
+                    GameManager.State = GameState.Ending;
+#endif
             }
         }
 
@@ -136,22 +153,27 @@ namespace LD28
         public override void OnAdditionToSpace(BEPUphysics.ISpace newSpace)
         {
             newSpace.Add(sword.Ent);
-            newSpace.Add(swordJoint);
+            //newSpace.Add(swordJoint);
+            newSpace.Add(swordgrabber);
         }
 
         public override void OnRemovalFromSpace(BEPUphysics.ISpace oldSpace)
         {
-            oldSpace.Remove(swordJoint);
+            //oldSpace.Remove(swordJoint);
             oldSpace.Remove(sword.Ent);
+            oldSpace.Remove(swordgrabber);
         }
 
         protected void onCollision(EntityCollidable sender, Collidable other, CollidablePairHandler pair)
         {
-            if(!swinging)
+            if(!swinging || hitThisSwing)
                 return;
-            Actor actor = other.Tag as Actor;
-            if(actor != null)
-                actor.Damage(3, this);
+            Actor actor;
+            if(other is ConvexCollidable && (actor = (other as ConvexCollidable).Entity.Tag as Actor) != null)
+            {
+                actor.Damage(MathHelper.Clamp(swordgrabber.AngularVelocityMagnitude * baseDamage, 1, 9), this);
+                hitThisSwing = true;
+            }
         }
 
         protected override void onDeath(Actor killer)

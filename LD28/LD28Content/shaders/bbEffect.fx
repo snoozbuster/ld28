@@ -8,7 +8,7 @@ float2 dim;
 
 //------- Texture Samplers --------
 Texture xBillboardTexture;
-sampler textureSampler = sampler_state { texture = <xBillboardTexture> ; magfilter = LINEAR; minfilter = LINEAR; mipfilter=LINEAR; AddressU = CLAMP; AddressV = CLAMP;};
+sampler textureSampler = sampler_state { texture = <xBillboardTexture> ; minfilter = Point; magfilter = Point; mipfilter=None; AddressU = CLAMP; AddressV = CLAMP;};
 
 struct BBVertexToPixel
 {

@@ -23,12 +23,12 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
         /// <summary>
         /// Offset from the position of the character to the 'eyes' while the character is standing.
         /// </summary>
-        public float StandingCameraOffset = .7f;
+        public float StandingCameraOffset = .95f;
 
         /// <summary>
         /// Offset from the position of the character to the 'eyes' while the character is crouching.
         /// </summary>
-        public float CrouchingCameraOffset = .4f;
+        public float CrouchingCameraOffset = .7f;
 
         /// <summary>
         /// Physics representation of the character.

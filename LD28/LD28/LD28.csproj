@@ -94,6 +94,7 @@
     <Compile Include="Actors\Entities\Robot.cs" />
     <Compile Include="Actors\BillboardDrawingObject.cs" />
     <Compile Include="Actors\Environment\Nature.cs" />
+    <Compile Include="MotorizedGrabSpring.cs" />
     <Compile Include="CharacterCamera.cs" />
     <Compile Include="CharacterController\CharacterController.cs" />
     <Compile Include="CharacterController\CharacterControllerInput.cs" />

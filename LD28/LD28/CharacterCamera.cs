@@ -143,7 +143,7 @@ namespace LD28
             Position = new Vector3(-1, -16, 6);
             Speed = 10;
             Yaw = 0;
-            Pitch = MathHelper.PiOver2;
+            pitch = -1.54674435f;
             Projection = Matrix.CreatePerspectiveFieldOfView(MathHelper.PiOver4, (float)Program.Game.Graphics.PreferredBackBufferWidth / Program.Game.Graphics.PreferredBackBufferHeight, .1f, 10000);
 
             rayCastFilter = RayCastFilter;
@@ -261,7 +261,16 @@ namespace LD28
             View = Matrix.Invert(World);            
         }
 
-        public void Reset() { throw new NotImplementedException(); }
+        public void Reset() 
+        {
+            
+            Mouse.SetPosition(RenderingDevice.GraphicsDevice.Viewport.Width / 2, RenderingDevice.GraphicsDevice.Viewport.Height / 2);
+            Input.Update(new GameTime(), false); // force an update to update mouse
+            Position = new Vector3(-1, -16, 6);
+            Speed = 10;
+            Yaw = 0;
+            pitch = -1.54674435f;
+        }
 
         public Matrix Rotation
         {

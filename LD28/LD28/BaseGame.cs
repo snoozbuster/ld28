@@ -86,6 +86,8 @@ namespace LD28
             BGM = e.CreateInstance();
             BGM.IsLooped = true;
             BGM.Play();
+
+            GameManager.Initialize(null, Content.Load<SpriteFont>("font/font"), null);
         }
 
         /// <summary>
@@ -108,7 +110,6 @@ namespace LD28
                 return;
             }
 
-            IsMouseVisible = true;
             Input.Update(gameTime, false);
             MediaSystem.Update(gameTime, Program.Game.IsActive);
 
@@ -131,9 +132,10 @@ namespace LD28
                 GameState statePrior = GameManager.State;
                 MenuHandler.Update(gameTime);
                 bool stateChanged = GameManager.State != statePrior;
-                
+
                 if(GameManager.State == GameState.Running)
                 {
+                    IsMouseVisible = false;
                     if((Input.CheckKeyboardJustPressed(Keys.Escape) ||
                         Input.CheckXboxJustPressed(Buttons.Start)) && !stateChanged)
                     {
@@ -144,19 +146,18 @@ namespace LD28
                     {
                         GameManager.Space.Update((float)(gameTime.ElapsedGameTime.TotalSeconds));
                         RenderingDevice.Update(gameTime);
-                        
+
                         Player.Update(gameTime);
+                        SubtitleBox.Update();
                         foreach(Actor a in actorList)
                             a.Update(gameTime);
 
-                        SubtitleBox.Update();
                         if(IsActive)
-                        {
-                            IsMouseVisible = false;
                             Mouse.SetPosition(GraphicsDevice.Viewport.Width / 2, GraphicsDevice.Viewport.Height / 2);
-                        }
                     }
                 }
+                else if(GameManager.State != GameState.Ending && GameManager.State != GameState.GameOver && GameManager.State != GameState.Menuing_Lev)
+                    IsMouseVisible = true;
             }
 
             base.Update(gameTime);
@@ -234,7 +235,7 @@ namespace LD28
         {
             List<Actor> people = new List<Actor>();
             for(int i = 0; i < 30; i++)
-                people.Add(Person.GeneratePerson(null, null, 5, 5));
+                people.Add(Person.GeneratePerson(5, 5));
             return people;
         }
         protected List<Actor> getCoreTerrain()
@@ -766,6 +767,7 @@ namespace LD28
             GameManager.Space.Add(Player);
             RenderingDevice.Add(Player);
             Player.Activate();
+            RenderingDevice.Camera.Reset();
         }
 
         public void End()
@@ -783,6 +785,24 @@ namespace LD28
         }
 
 #if WINDOWS
+        protected override void OnActivated(object sender, EventArgs args)
+        {
+            if(GameManager.PreviousState == GameState.Running)
+                GameManager.State = GameState.Running;
+            BGM.Resume();
+
+            base.OnActivated(sender, args);
+        }
+
+        protected override void OnDeactivated(object sender, EventArgs args)
+        {
+            if(GameManager.State == GameState.Running)
+                GameManager.State = GameState.Paused;
+            BGM.Pause();
+
+            base.OnDeactivated(sender, args);
+        }
+
         protected void SystemEvents_SessionSwitch(object sender, Microsoft.Win32.SessionSwitchEventArgs e)
         {
             if(e.Reason == SessionSwitchReason.SessionLock)

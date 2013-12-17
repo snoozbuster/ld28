@@ -44,7 +44,7 @@ namespace LD28
             disconnectMenu = new GamePadDCMenu();
             exitMenu = new ExitMenu();
             queryMenu = new GamePadQueryMenu();
-            //endingMenu = new EndingMenu(loader.good_end);
+            endingMenu = new EndingMenu(loader.good_end);
             //badEndingMenu = new EndingMenu(loader.bad_end);
         }
 
@@ -583,18 +583,22 @@ namespace LD28
             private const int smallerTime = 300;
             private const int largerTime = 750;
 
-            private readonly MenuControl start, instructions;
+            private readonly MenuControl start, instructions, ending;
+            private bool checkedReg = false;
+            private GameState? endingState = null;
 
             public MainMenu()
             {
                 MenuButton quit;
-                start = new MenuButton(loader.startButton, delegate { GameManager.State = GameState.Running; timerInMilliseconds = 0; Program.Game.Start(); });
-                instructions = new MenuButton(loader.instructionsButton, delegate { /* todo: instructions */ });
+                start = new MenuButton(loader.startButton, delegate { checkedReg = false;  GameManager.State = GameState.Running; timerInMilliseconds = 0; Program.Game.Start(); });
+                instructions = new MenuButton(loader.instructionsButton, delegate { checkedReg = false;  /* todo: instructions */ });
                 quit = new MenuButton(loader.quitButton, delegate { GameManager.State = GameState.Exiting; });
+                ending = new MenuButton(loader.endingButton, delegate { GameManager.State = (GameState)endingState; });
 
                 start.SetDirectionals(null, instructions, null, null);
                 instructions.SetDirectionals(start, quit, null, null);
                 quit.SetDirectionals(instructions, null, null, null);
+                ending.SetDirectionals(null, null, null, null);
                 controlArray.AddRange(new MenuControl[] { instructions, start, quit });
 
                 selectedControl = start;
@@ -625,6 +629,9 @@ namespace LD28
                     RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.NonPremultiplied, SamplerState.LinearClamp, null, null);
                     RenderingDevice.SpriteBatch.Draw(loader.mainMenuBackground, new Vector2(0, 0), null, Color.White, 0, Vector2.Zero, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
                     RenderingDevice.SpriteBatch.Draw(loader.mainMenuLogo, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.15f), null, Color.White, 0.0f, new Vector2(loader.mainMenuLogo.Width / 2, loader.mainMenuLogo.Height / 2), 0.75f * RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
+                    if(controlArray.Contains(ending))
+                        RenderingDevice.SpriteBatch.DrawString(loader.BiggerFont, "Are you happy with your ending? Watch it again below.", new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.6f), Color.White, 0,
+                            loader.BiggerFont.MeasureString("Are you happy with your ending? Watch it again below.") * 0.5f, 1, SpriteEffects.None, 0);
                     base.Draw(gameTime);
                     RenderingDevice.SpriteBatch.End();
                 }
@@ -654,7 +661,22 @@ namespace LD28
                     }
                     else if(Input.MessagePad != null && timer <= 0)
                     {
-                        // todo: if the game was played show an error message
+                        if(!checkedReg)
+                        {
+                            using(RegistryKey k1 = Registry.CurrentUser.OpenSubKey("Software"))
+                                using(RegistryKey k2 = k1.OpenSubKey("LD28_Travesty"))
+                                    if(k2 != null)
+                                        endingState = (GameState)k2.GetValue("ending", 0);
+                            if(endingState != null && endingState.Value == 0)
+                                endingState = null;
+                            checkedReg = true;
+                        }
+                        if(endingState.HasValue && controlArray.Contains(start))
+                        {
+                            controlArray.Clear();
+                            controlArray.Add(ending);
+                            ending.IsSelected = null;
+                        }
                         if(Input.CheckKeyboardJustPressed(Keys.Escape) || Input.CheckXboxJustPressed(Buttons.B))
                         {
                             ReturnToPressStart();
@@ -725,21 +747,21 @@ namespace LD28
         #region Ending
         private class EndingMenu : Menu
         {
-            protected Sprite[] credits;
-            protected float alpha;
+            //protected Sprite[] credits;
+            //protected float alpha;
             protected float time;
-            protected bool moved;
-            protected bool fadingOut;
+            //protected bool moved;
+            //protected bool fadingOut;
 
             protected float screenAlpha = 255;
 
             protected const float deltaA = 3;
             protected const float secondsToPause = 3;
 
-            protected Texture2D gradient;
+            //protected Texture2D gradient;
 
-            protected Rectangle topR;
-            protected Rectangle bottomR;
+            //protected Rectangle topR;
+            //protected Rectangle bottomR;
 
             protected Video end;
 
@@ -748,97 +770,87 @@ namespace LD28
             public EndingMenu(Video end)
             {
                 this.end = end;
-                credits = loader.Credits;
+                //credits = loader.Credits;
                 onGDMReset(this, EventArgs.Empty);
                 RenderingDevice.GDM.DeviceReset += onGDMReset;
-                Program.Game.Deactivated += new EventHandler<EventArgs>(Game_Deactivated);
-                Program.Game.Activated += new EventHandler<EventArgs>(Game_Activated);
-            }
-
-            void Game_Activated(object sender, EventArgs e)
-            {
-                player.Resume();
-            }
-
-            void Game_Deactivated(object sender, EventArgs e)
-            {
-                if(player.State == MediaState.Playing)
-                    player.Pause();
             }
 
             private void onGDMReset(object sender, EventArgs e)
             {
-                gradient = new Texture2D(RenderingDevice.GraphicsDevice, 1, 20);
-                Color[] colors = new Color[20];
-                for(int i = 0; i < 5; i++)
-                    colors[i] = new Color(0, 0, 0, 255);
-                for(int i = 5; i < 20; i++)
-                    colors[i] = new Color(0, 0, 0, 255 - ((255 / 15) * (i - 4)));
-                gradient.SetData(colors);
+                //gradient = new Texture2D(RenderingDevice.GraphicsDevice, 1, 20);
+                //Color[] colors = new Color[20];
+                //for(int i = 0; i < 5; i++)
+                //    colors[i] = new Color(0, 0, 0, 255);
+                //for(int i = 5; i < 20; i++)
+                //    colors[i] = new Color(0, 0, 0, 255 - ((255 / 15) * (i - 4)));
+                //gradient.SetData(colors);
 
                 player = new VideoPlayer();
-
-                player.IsMuted = true;
-
                 player.Play(end);
-
                 player.Pause();
             }
 
             public override void Update(GameTime gameTime)
             {
-                if(!credits[0].Moving && !moved)
-                {
-                    moved = true;
-                    credits[0].Move(new Vector2(0, -0.55f), 115);
-                    credits[1].Move(new Vector2(0, -0.55f), 115);
-                    topR = new Rectangle(0, 0, (int)RenderingDevice.Width, 20);
-                    bottomR = new Rectangle(0, (int)RenderingDevice.Height - 20, (int)RenderingDevice.Width, 20);
-                }
+                //if(!credits[0].Moving && !moved)
+                //{
+                //    moved = true;
+                //    credits[0].Move(new Vector2(0, -0.55f), 115);
+                //    credits[1].Move(new Vector2(0, -0.55f), 115);
+                //    topR = new Rectangle(0, 0, (int)RenderingDevice.Width, 20);
+                //    bottomR = new Rectangle(0, (int)RenderingDevice.Height - 20, (int)RenderingDevice.Width, 20);
+                //}
 
-                for(int i = 0; i < credits.Length - 1; i++)
-                    credits[i].ForceMoveUpdate(gameTime);
+                //for(int i = 0; i < credits.Length - 1; i++)
+                //    credits[i].ForceMoveUpdate(gameTime);
 
-                if(!credits[0].Moving)
+                //if(!credits[0].Moving)
+                //{
+                //    if(alpha + deltaA > 255 && !fadingOut)
+                //    {
+                //        alpha = 255;
+                //        time += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                //        if(time >= secondsToPause)
+                //        {
+                //            fadingOut = true;
+                //            time = 0;
+                //        }
+                //    }
+                //    else if(alpha - deltaA < 0 && fadingOut)
+                //    {
+                //        alpha = 0;
+                if(Program.Game.BGM.State == SoundState.Playing)
+                    Program.Game.BGM.Pause();
+
+                if(player.State == MediaState.Paused)
                 {
-                    if(alpha + deltaA > 255 && !fadingOut)
+                    player.Resume();
+                    using(RegistryKey k1 = Registry.CurrentUser.OpenSubKey("Software", true))
+                        using(RegistryKey k2 = k1.CreateSubKey("LD28_Travesty"))
+                            k2.SetValue("ending", (int)GameManager.State);
+                }
+                else if(player.State == MediaState.Stopped)
+                {
+                    mainMenu.Update(gameTime);
+                    time += (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if(time >= secondsToPause)
                     {
-                        alpha = 255;
-                        time += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                        if(time >= secondsToPause)
+                        if(screenAlpha - deltaA < 0) // black background
                         {
-                            fadingOut = true;
-                            time = 0;
+                            Program.Game.BGM.Resume();
+                            GameManager.State = GameState.MainMenu;
+                            Reset();
                         }
-                    }
-                    else if(alpha - deltaA < 0 && fadingOut)
-                    {
-                        alpha = 0;
-                        if(player.State == MediaState.Paused)
-                            player.Resume();
-                        else if(player.State == MediaState.Stopped)
-                        {
-                            time += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                            if(time >= secondsToPause)
-                            {
-                                if(screenAlpha - deltaA < 0) // black background
-                                {
-                                    GameManager.State = GameState.MainMenu;
-                                    MediaSystem.PlayTrack(SongOptions.Menu);
-                                    using(RegistryKey k1 = Registry.CurrentUser.OpenSubKey("Software", true))
-                                        using(RegistryKey k2 = k1.CreateSubKey("LD28_Travesty"))
-                                            k2.SetValue("final", true);
-                                }
-                                else
-                                    screenAlpha -= deltaA;
-                            }
-                        }
-                    }
-                    else
-                    {
-                        alpha += deltaA * (fadingOut ? -1 : 1);
+                        else
+                            screenAlpha -= deltaA;
                     }
                 }
+                //    }
+                //    else
+                //    {
+                //        alpha += deltaA * (fadingOut ? -1 : 1);
+                //    }
+                //}
             }
 
             public override void Draw(GameTime gameTime)
@@ -847,18 +859,23 @@ namespace LD28
 
                 RenderingDevice.SpriteBatch.Draw(loader.EmptyTex, new Rectangle(0, 0, (int)RenderingDevice.Width, (int)RenderingDevice.Height),
                     new Color(0, 0, 0, screenAlpha) * (screenAlpha / 255f));
-                for(int i = 0; i < credits.Length - 1; i++)
-                    credits[i].Draw();
-                credits[credits.Length - 1].Draw(new Color(255, 255, 255, alpha) * (alpha / 255f));
+                //for(int i = 0; i < credits.Length - 1; i++)
+                //    credits[i].Draw();
+                //credits[credits.Length - 1].Draw(new Color(255, 255, 255, alpha) * (alpha / 255f));
 
-                Color whiteWithScreenAlpha = new Color(255, 255, 255, screenAlpha) * (screenAlpha / 255f);
-                RenderingDevice.SpriteBatch.Draw(gradient, topR, null, whiteWithScreenAlpha, 0, Vector2.Zero, SpriteEffects.None, 0);
-                RenderingDevice.SpriteBatch.Draw(gradient, bottomR, null, whiteWithScreenAlpha, 0, Vector2.Zero, SpriteEffects.FlipVertically, 0);
+                //Color whiteWithScreenAlpha = new Color(255, 255, 255, screenAlpha) * (screenAlpha / 255f);
+                //RenderingDevice.SpriteBatch.Draw(gradient, topR, null, whiteWithScreenAlpha, 0, Vector2.Zero, SpriteEffects.None, 0);
+                //RenderingDevice.SpriteBatch.Draw(gradient, bottomR, null, whiteWithScreenAlpha, 0, Vector2.Zero, SpriteEffects.FlipVertically, 0);
 
                 if(player.State == MediaState.Playing)
                     RenderingDevice.SpriteBatch.Draw(player.GetTexture(), new Rectangle(0, 0, (int)RenderingDevice.Width, (int)RenderingDevice.Height), Color.White);
 
                 RenderingDevice.SpriteBatch.End();
+            }
+
+            protected void Reset()
+            {
+                onGDMReset(this, EventArgs.Empty);
             }
         }
         #endregion

@@ -49,6 +49,7 @@ namespace LD28
         public Sprite noButton;
         public Sprite pauseQuitButton;
         public Sprite instructionsButton;
+        public Sprite endingButton;
         #endregion
 
         #region Font
@@ -58,7 +59,7 @@ namespace LD28
 
         #region Video
         public Video death_end; // empty
-        public Video good_end; // empty
+        public Video good_end;
         public Video bad_end; // empty
         #endregion
 
@@ -82,7 +83,7 @@ namespace LD28
 
         public IEnumerator<float> GetEnumerator()
         {
-            totalItems = 2 + 23 + 10 + 2;
+            totalItems = 2 + 23 + 10 + 2 + 1;
 
             #region Shaders
             BillboardEffect = content.Load<Effect>("shaders/bbEffect");
@@ -110,6 +111,7 @@ namespace LD28
             startButton = new Sprite(delegate { return buttonsTex; }, new Vector2(RenderingDevice.Width * 0.23f, RenderingDevice.Height * 0.75f), new Rectangle(0, buttonRect.Height * 2, buttonRect.Width, buttonRect.Height), Sprite.RenderPoint.UpLeft);
             yesButton = new Sprite(delegate { return buttonsTex; }, new Vector2(RenderingDevice.Width * 0.315f, RenderingDevice.Height * 0.65f), new Rectangle(buttonRect.Width, 0, buttonRect.Width, buttonRect.Height), Sprite.RenderPoint.UpLeft);
             noButton = new Sprite(delegate { return buttonsTex; }, new Vector2(RenderingDevice.Width * 0.515f, RenderingDevice.Height * 0.65f), new Rectangle(buttonRect.Width, buttonRect.Height, buttonRect.Width, buttonRect.Height), Sprite.RenderPoint.UpLeft);
+            endingButton = new Sprite(delegate { return buttonsTex; }, new Vector2(RenderingDevice.Width * 0.415f, RenderingDevice.Height * 0.75f), new Rectangle(buttonRect.Width, buttonRect.Height * 3, buttonRect.Width, buttonRect.Height), Sprite.RenderPoint.UpLeft);
             yield return progress();
             mainMenuBackground = content.Load<Texture2D>("textures/background");
             yield return progress();
@@ -167,6 +169,11 @@ namespace LD28
             Font = content.Load<SpriteFont>("font/font");
             yield return progress();
             BiggerFont = content.Load<SpriteFont>("font/bigfont");
+            yield return progress();
+            #endregion
+
+            #region Video
+            good_end = content.Load<Video>("video/good");
             yield return progress();
             #endregion
         }

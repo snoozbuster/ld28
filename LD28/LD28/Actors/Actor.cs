@@ -168,7 +168,7 @@ namespace LD28
             KeyboardState keyboard = Input.KeyboardState;
             Keys[] pressedKeys = keyboard.GetPressedKeys();
             Keys key;
-            if((key = pressedKeys.FirstOrDefault(v => { return v != Keys.LeftShift && v != Keys.RightShift && v != Keys.RightAlt && v != Keys.LeftAlt && v != Keys.RightControl && v != Keys.LeftControl && v != Keys.None; })) != 0)
+            if((key = pressedKeys.FirstOrDefault(v => { return v != Keys.LeftShift && v != Keys.RightShift && v != Keys.RightAlt && v != Keys.LeftAlt && v != Keys.RightControl && v != Keys.LeftControl && v != Keys.None; })) != 0 && Input.CheckKeyboardJustPressed(key))
                 return new KeypressEventArgs(sender, key,
                     Vector3.Distance(sender.PhysicsObject.Position, target.PhysicsObject.Position),
                     pressedKeys.Any(v => { return v == Keys.LeftShift || v == Keys.RightShift; }),
