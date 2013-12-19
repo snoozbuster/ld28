@@ -28,11 +28,17 @@ namespace LD28
         public Texture2D pressStart;
         public Texture2D mainMenuLogo;
         public Texture2D mainMenuBackground;
-        public Sprite[] Credits; // empty
 
         public Texture2D TreeTexture;
         public Texture2D RockTexture;
         public Texture2D GrassTexture;
+        public Texture2D Evidence;
+
+        public Texture2D HealthBarFill;
+        public Texture2D HealthBarChrome;
+
+        public Texture2D Instructions_Xbox;
+        public Texture2D Instructions_PC;
 
         public Texture2D EvilPerson;
         public Texture2D CrazyGuy;
@@ -60,9 +66,9 @@ namespace LD28
         #endregion
 
         #region Video
-        public Video death_end; // empty
+        public Video death_end;
         public Video good_end;
-        public Video bad_end; // empty
+        public Video bad_end;
         #endregion
 
         #region Models
@@ -70,12 +76,16 @@ namespace LD28
         public Model Trees;
         public Model Skydome;
         public Model SkyscraperModel;
+        
         public Model PoliceModel;
         public Model HouseModel;
         public Model DoorModel;
         public Model ApartmentModel;
         public Model WarehouseModel;
+        
         public Model SwordModel;
+        public Model LaserModel;
+        public Model RobotModel;
         #endregion
 
         public Loader(ContentManager content)
@@ -85,7 +95,7 @@ namespace LD28
 
         public IEnumerator<float> GetEnumerator()
         {
-            totalItems = 2 + 24 + 10 + 2 + 1;
+            totalItems = 2 + 29 + 12 + 2 + 3;
 
             #region Shaders
             BillboardEffect = content.Load<Effect>("shaders/bbEffect");
@@ -125,6 +135,18 @@ namespace LD28
             GrassTexture = content.Load<Texture2D>("textures/tallgrass");
             yield return progress();
             RockTexture = content.Load<Texture2D>("textures/rock");
+            yield return progress();
+            Evidence = content.Load<Texture2D>("textures/evidence");
+            yield return progress();
+
+            HealthBarFill = content.Load<Texture2D>("textures/healthbar_full");
+            yield return progress();
+            HealthBarChrome = content.Load<Texture2D>("textures/healthbar_empty");
+            yield return progress();
+
+            Instructions_Xbox = content.Load<Texture2D>("textures/instructions_xbox");
+            yield return progress();
+            Instructions_PC = content.Load<Texture2D>("textures/instructions_pc");
             yield return progress();
 
             EvilPerson = content.Load<Texture2D>("textures/people/char_evildude");
@@ -166,7 +188,12 @@ namespace LD28
             yield return progress();
             WarehouseModel = content.Load<Model>("models/warehouse");
             yield return progress();
+
             SwordModel = content.Load<Model>("models/sword");
+            yield return progress();
+            LaserModel = content.Load<Model>("models/laser");
+            yield return progress();
+            RobotModel = content.Load<Model>("models/robot");
             yield return progress();
             #endregion
 
@@ -179,6 +206,10 @@ namespace LD28
 
             #region Video
             good_end = content.Load<Video>("video/good");
+            yield return progress();
+            bad_end = content.Load<Video>("video/bad");
+            yield return progress();
+            death_end = content.Load<Video>("video/dead");
             yield return progress();
             #endregion
         }

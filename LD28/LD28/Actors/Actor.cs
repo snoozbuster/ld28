@@ -67,6 +67,11 @@ namespace LD28
 
         public virtual void Damage(float amount, Actor attacker)
         {
+            if(this is Player)
+                MediaSystem.PlaySoundEffect(SFXOptions.Explosion);
+            else
+                MediaSystem.PlaySoundEffect(SFXOptions.Achievement);
+
             Health -= amount;
             if(Health < 0)
                 Health = 0;
@@ -91,10 +96,10 @@ namespace LD28
 
         protected virtual void onKeypress(KeypressEventArgs eventArgs) { }
         protected virtual void onDeath(Actor killer) 
-        { 
+        {
+            Space.Remove(this);
+            RenderingDevice.Remove(this);
             Inactive = true; 
-            Space.Remove(this); 
-            RenderingDevice.Remove(this); 
         }
 
         public void DoEvent(KeypressEventArgs args)

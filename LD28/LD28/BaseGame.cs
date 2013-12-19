@@ -35,6 +35,8 @@ namespace LD28
         public SoundEffectInstance BGM;
         private List<Actor> actorList = new List<Actor>();
 
+        private August august;
+
         public BaseGame()
         {
             Graphics = new GraphicsDeviceManager(this);
@@ -148,6 +150,7 @@ namespace LD28
                         RenderingDevice.Update(gameTime);
 
                         Player.Update(gameTime);
+                        august.Update(gameTime);
                         SubtitleBox.Update();
                         foreach(Actor a in actorList)
                             a.Update(gameTime);
@@ -205,6 +208,8 @@ namespace LD28
             actorList.Reverse();
             foreach(Actor a in actorList)
                 a.Draw(); // draws billboards and anything else
+            august.Draw();
+            Player.Draw();
 
             SubtitleBox.Draw();
         }
@@ -221,32 +226,75 @@ namespace LD28
 
         protected void createActors()
         {
-            Player = new Player();
-
             actorList.AddRange(getTrees());
             actorList.AddRange(getRocks());
             actorList.AddRange(getGrass());
             actorList.AddRange(getCoreTerrain());
             actorList.AddRange(getBuildings());
             actorList.AddRange(getPeople());
-            actorList.AddRange(getDoors());
+            actorList.AddRange(getMisc());
+            actorList.AddRange(getRobots());
         }
 
-        protected List<Actor> getDoors()
+        protected List<Actor> getMisc()
         {
             List<Actor> output = new List<Actor>();
-
+            output.Add(new Evidence(new Vector3(111.5f, 47, -13)));
+            return output;
+        }
+        protected List<Actor> getRobots()
+        {
+            List<Actor> output = new List<Actor>();
+            // todo: robots
             return output;
         }
         protected List<Actor> getPeople()
         {
             List<Actor> people = new List<Actor>();
-            for(int i = 0; i < 30; i++)
+            for(int i = 0; i < 15; i++)
                 people.Add(Person.GeneratePerson(5, 5));
             people.AddRange(getApartmentPeople());
             people.AddRange(getPolicePeople());
             people.AddRange(getGangPeople());
+            people.AddRange(getPeopleInHouses());
             return people;
+        }
+        protected List<Actor> getPeopleInHouses()
+        {
+            List<Actor> output = new List<Actor>();
+            List<Vector2> minPositions = new List<Vector2>();
+            List<Vector2> maxPositions = new List<Vector2>();
+            minPositions.Add(new Vector2(-18, 112));
+            maxPositions.Add(new Vector2(-8, 126));
+            minPositions.Add(new Vector2(2, 136));
+            maxPositions.Add(new Vector2(16, 146));
+            minPositions.Add(new Vector2(30, 136));
+            maxPositions.Add(new Vector2(44, 146));
+            minPositions.Add(new Vector2(56, 136));
+            maxPositions.Add(new Vector2(70, 146));
+            minPositions.Add(new Vector2(38, 100));
+            maxPositions.Add(new Vector2(52, 110));
+            minPositions.Add(new Vector2(38, 100));
+            maxPositions.Add(new Vector2(52, 110));
+            minPositions.Add(new Vector2(16, 100));
+            maxPositions.Add(new Vector2(30, 110));
+            minPositions.Add(new Vector2(16, 86));
+            maxPositions.Add(new Vector2(30, 96));
+            minPositions.Add(new Vector2(38, 86));
+            maxPositions.Add(new Vector2(52, 96));
+
+            Random r = new Random();
+            for(int i = 0; i < minPositions.Count; i++)
+            {
+                int people = r.Next(0, 4);
+                // make it less likely to have empty houses
+                if(people == 0)
+                    people = r.Next(0, 4);
+                for(int j = 0; j < people; j++)
+                    output.Add(Person.GeneratePersonWithinBounds(minPositions[i], maxPositions[i], 5, 5));
+            }
+
+            return output;
         }
         protected List<Actor> getApartmentPeople()
         {
@@ -268,17 +316,18 @@ namespace LD28
         protected List<Actor> getGangPeople()
         {
             List<Actor> output = new List<Actor>();
-            string text = "I'm in a gang. What of it?";
+            string[] text = new[] { "I'm in a gang. What of it?", "You can do jobs from the board on the wall.", "August is hiding in one of the houses around town.\nYou'll need to find someone who knows his location to kill him, though." };
             for(int i = 0; i < 3; i++)
-                output.Add(Person.GenerateGangMember(5, 5, text));
+                output.Add(Person.GenerateGangMember(5, 5, text[i]));
             return output;
         }
         protected List<Actor> getPolicePeople()
         {
             List<Actor> output = new List<Actor>();
-            string text = "I'm an officer of the law. Don't break it.";
+            string[] text = new[] { "I'm an officer of the law. Don't break it.", "If you're looking to take down August, I hear there's some evidence in his warehouse that you can use to find him.\nYou didn't hear it from me, though.",
+                "You can do missions from the board on the wall." };
             for(int i = 0; i < 3; i++)
-                output.Add(Person.GeneratePolice(5, 5, text));
+                output.Add(Person.GeneratePolice(5, 5, text[i]));
             return output;
         }
         protected List<Actor> getCoreTerrain()
@@ -287,7 +336,6 @@ namespace LD28
             BaseModel ground = new BaseModel(delegate { return Loader.Ground; }, false, false, Vector3.Zero);
             BaseModel trees = new BaseModel(delegate { return Loader.Trees; }, true, false, Vector3.Zero);
             BaseModel sky = new BaseModel(delegate { return Loader.Skydome; }, false, null, Vector3.Zero);
-            sky.ModelPosition -= Vector3.UnitZ * 15;
             actors.Add(new Building(ground));
             actors.Add(new Building(trees));
             actors.Add(new Building(sky));
@@ -738,70 +786,58 @@ namespace LD28
         protected List<Actor> getBuildings()
         {
             List<Actor> actors = new List<Actor>();
-            //actors.Add(new Building(new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, new Vector3(40))));
-            //actors.Add(new Building(new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, new Vector3(100, 100, 40))));
-            //BaseModel scraper = new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, new Vector3(100, 100, 40));
-            //scraper.Ent.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
-            //actors.Add(new Building(scraper));
-            //actors.Add(getHouse(new Vector3(45, 105, 5.73529f), new Vector2(1, 0)));
-            //actors.Add(getHouse(new Vector3(23, 105, 5.73529f), new Vector2(1, 0)));
-            //actors.Add(getHouse(new Vector3(69, 3, 5.73529f), new Vector2(1, 0)));
-            //actors.Add(getHouse(new Vector3(45, 91, 5.73529f), new Vector2(-1, 0)));
-            //actors.Add(getHouse(new Vector3(23, 91, 5.73529f), new Vector2(-1, 0)));
-            //actors.Add(getHouse(new Vector3(63, 141, 5.73529f), new Vector2(-1, 0)));
-            //actors.Add(getHouse(new Vector3(9, 141, 5.73529f), new Vector2(-1, 0)));
-            //actors.Add(getHouse(new Vector3(42.8971f, -1, 5.73529f), new Vector2(0, 1)));
-            //actors.Add(getHouse(new Vector3(-13, 119, 5.73529f), new Vector2(0, -1)));
+
+            Quaternion identity, facingPlusX, facingMinusX, facingMinusY;
+            identity = Quaternion.Identity;
+            facingPlusX = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, -MathHelper.PiOver2);
+            facingMinusX = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.PiOver2);
+            facingMinusY = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
 
             actors.Add(new Building(new BaseModel(delegate { return Loader.SkyscraperModel; }, false, false, Vector3.Zero)));
-            actors.Add(new Building(new BaseModel(delegate { return Loader.HouseModel; }, false, false, Vector3.Zero)));
-            actors.Add(new Building(new BaseModel(delegate { return Loader.ApartmentModel; }, false, false, Vector3.Zero)));
-            actors.Add(new Building(new BaseModel(delegate { return Loader.WarehouseModel; }, false, false, Vector3.Zero)));
-            //actors.Add(getPolice(new Vector3(121, 69, 5.73529f), new Vector2(0, 1)));
+            actors.Add(new Building(new BaseModel(delegate { return Loader.HouseModel; }, false, false, Vector3.Zero),
+                new[] { 
+                    getDoor(Vector3.UnitX, new Vector3(45, 111.5f, 2), identity),
+                    getDoor(Vector3.UnitX, new Vector3(23, 111.5f, 2), identity), 
+                    getDoor(Vector3.UnitX, new Vector3(69, 9.5f, 2), identity),
+                    getDoor(-Vector3.UnitX, new Vector3(9, 134.5f, 2), facingMinusY),
+                    getDoor(-Vector3.UnitX, new Vector3(37, 134.5f, 2), facingMinusY),
+                    getDoor(-Vector3.UnitX, new Vector3(63, 134.5f, 2), facingMinusY),
+                    getDoor(-Vector3.UnitX, new Vector3(23, 84.5f, 2), facingMinusY),
+                    getDoor(-Vector3.UnitX, new Vector3(45, 84.5f, 2), facingMinusY),
+                    getDoor(Vector3.UnitY, new Vector3(36.5f, -1, 2), facingMinusX),
+                    getDoor(Vector3.UnitY, new Vector3(114.5f, 69, 2), facingMinusX),
+                    getDoor(-Vector3.UnitY, new Vector3(-6.5f, 119, 2), facingPlusX),
+                }));
+            Vector3 leftDoorVector = new Vector3(-32, 66.5f, 2);
+            Vector3 rightDoorVector = new Vector3(-32, 83.5f, 2);
+            int i = 0;
+            actors.Add(new Building(new BaseModel(delegate { return Loader.ApartmentModel; }, false, false, Vector3.Zero),
+                new[] {
+                    getDoor(Vector3.UnitX, leftDoorVector + Vector3.UnitZ * 10 * i++, identity),
+                    getDoor(Vector3.UnitX, leftDoorVector + Vector3.UnitZ * 10 * i++, identity),
+                    getDoor(Vector3.UnitX, leftDoorVector + Vector3.UnitZ * 10 * i++, identity),
+                    getDoor(Vector3.UnitX, leftDoorVector + Vector3.UnitZ * 10 * i++, identity),
+                    getDoor(-Vector3.UnitX, rightDoorVector + Vector3.UnitZ * 10 * (i++ % 4), identity),
+                    getDoor(-Vector3.UnitX, rightDoorVector + Vector3.UnitZ * 10 * (i++ % 4), identity),
+                    getDoor(-Vector3.UnitX, rightDoorVector + Vector3.UnitZ * 10 * (i++ % 4), identity),
+                    getDoor(-Vector3.UnitX, rightDoorVector + Vector3.UnitZ * 10 * (i++ % 4), identity),
+                }));
+            actors.Add(new Building(new BaseModel(delegate { return Loader.WarehouseModel; }, false, false, Vector3.Zero),
+                new[] { getDoor(Vector3.UnitY, new Vector3(138.5f, -13, 2), facingMinusX) }));
 
             return actors;
         }
-
-        protected Actor getHouse(Vector3 position, Vector2 direction)
+        protected Door getDoor(Vector3 slideDirection, Vector3 position, Quaternion rotation)
         {
-            BaseModel house = new BaseModel(delegate { return Loader.HouseModel; }, false, false, position);
-            BaseModel door = new BaseModel(delegate { return Loader.DoorModel; }, false, true, Vector3.Zero);
-            door.Ent.CollisionInformation.LocalPosition = new Vector3(0, -6.5f, 3.73529f);
-            Quaternion orientation;
-            if(direction.Y == 1)
-                orientation = Quaternion.Identity;
-            else if(direction.Y == -1)
-                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
-            else if(direction.X == 1)
-                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, -MathHelper.PiOver2);
-            else
-                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.PiOver2);
-            house.Ent.Orientation = orientation;
-            door.Ent.Orientation = orientation;
-            return new Building(house, new[] { new Door(door, new Vector3(direction, 0)) });
-        }
-
-        protected Actor getPolice(Vector3 position, Vector2 direction)
-        {
-            BaseModel house = new BaseModel(delegate { return Loader.PoliceModel; }, false, false, position);
-            BaseModel door = new BaseModel(delegate { return Loader.DoorModel; }, false, true, Vector3.Zero);
-            door.Ent.CollisionInformation.LocalPosition = new Vector3(0, -6.5f, 3.73529f);
-            Quaternion orientation;
-            if(direction.Y == 1)
-                orientation = Quaternion.Identity;
-            else if(direction.Y == -1)
-                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
-            else if(direction.X == 1)
-                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, -MathHelper.PiOver2);
-            else
-                orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.PiOver2);
-            // house.Ent.Orientation = orientation;
-            door.Ent.Orientation = orientation;
-            return new Building(house, new[] { new Door(door, new Vector3(direction, 0)) });
+            BaseModel door = new BaseModel(delegate { return Loader.DoorModel; }, false, null, position);
+            door.Ent.Orientation = rotation;
+            return new Door(door, slideDirection);
         }
 
         public void Start()
         {
+            Player = new Player();
+            august = new August();
             foreach(Actor a in actorList)
             {
                 RenderingDevice.Add(a);
@@ -822,17 +858,21 @@ namespace LD28
             }
             GameManager.Space.Remove(Player);
             RenderingDevice.Remove(Player);
+            GameManager.Space.Remove(august);
+            RenderingDevice.Remove(august);
             actorList.Clear();
             Player.Deactivate();
             createActors();
         }
 
+        #region windows
 #if WINDOWS
         protected override void OnActivated(object sender, EventArgs args)
         {
             if(GameManager.PreviousState == GameState.Running)
                 GameManager.State = GameState.Running;
             BGM.Resume();
+            BGM.Volume = 1;
 
             base.OnActivated(sender, args);
         }
@@ -860,6 +900,7 @@ namespace LD28
             }
         }
 #endif
+        #endregion
     }
 }
 

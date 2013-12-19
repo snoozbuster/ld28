@@ -21,11 +21,18 @@ namespace LD28
 
         protected bool canTalk = true;
 
-        protected static string[] sayings;
-        protected static string[] firstNames;
-        protected static string[] lastNames;
+        protected static readonly string[] sayings;
+        protected static readonly string[] firstNames;
+        protected static readonly string[] lastNames;
+        protected static readonly Vector2 globalMinPosition = new Vector2(-18, -22);
+        protected static readonly Vector2 globalMaxPosition = new Vector2(83, 129);
+        protected static readonly int crazyPersonChance = 100;
         protected static bool generatedCrazy;
 
+        protected static readonly string gangText = "You aren't evil enough for us to consider you a part of our gang.\nGo kill some people and destroy some scenery and then come back.";
+        protected static readonly string policeText = "Hey, you! You're a wanted man! Come back here!";
+        protected static readonly int evilThreshold = -10;
+        
         public bool IsPolice { get; protected set; }
         public bool IsGang { get; protected set; }
 
@@ -52,7 +59,7 @@ namespace LD28
         }
 
         public Person(Vector3 position, Texture2D personTex, string text, float talkDistance, string name, float health)
-            : base(new BepuBox(position, 1.5f, 1.5f, 3.5f),
+            : base(new Cylinder(position, 3.5f, .75f) { Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.PiOver2) },
                    new BillboardDrawingObject(position, personTex, new Vector2(1.5f, 3.5f), delegate { return Program.Game.Loader.BillboardEffect; }), 
                    health)
         {
@@ -69,9 +76,14 @@ namespace LD28
 
         protected override void onKeypress(KeypressEventArgs eventArgs)
         {
-            if(canTalk && (eventArgs.Keypress == Keys.Enter || eventArgs.Gamepad.IsButtonDown(Buttons.X)) && eventArgs.Distance < talkDistance && text != null)
+            if(!Inactive && canTalk && (eventArgs.Keypress == Keys.E || eventArgs.Gamepad.IsButtonDown(Buttons.X)) && eventArgs.Distance < talkDistance && text != null)
             {
-                SubtitleBox.AddMessage(text, Name);
+                if(IsPolice && (eventArgs.Sender as Player).Morality < evilThreshold)
+                    SubtitleBox.AddMessage(policeText, Name);
+                else if(IsGang && (eventArgs.Sender as Player).Morality > evilThreshold)
+                    SubtitleBox.AddMessage(gangText, Name);
+                else
+                    SubtitleBox.AddMessage(text, Name);
                 canTalk = false;
             }
         }
@@ -82,18 +94,18 @@ namespace LD28
             Player player = killer as Player;
             if(player != null)
             {
-                if(IsGang && player.GetProgressionData(this, "canKill") != null)
+                if(IsGang && player.HasProgressionData("canKill_" + this.Name))
                     player.GiveMorality(MathHelper.Clamp((float)random.NextDouble(), 0.5f, 1) * random.Next(1, 4) * 2);
                 else
                     player.TakeMorality(MathHelper.Clamp((float)random.NextDouble(), 0.5f, 1) * random.Next(1, 4) * (IsPolice ? 3 : 1));
-                player.UpdateProgressionData(this, "killed", Name);
+                player.UpdateProgressionData("killed_" + this.Name, Name);
             }
         }
 
         public static Person GeneratePerson(float talkDistance, float health)
         {
-            if(!generatedCrazy && random.Next(30) == 0)
-                return generateCrazyPerson(new Vector2(-76, -78), new Vector2(61, 78), 1.75f);
+            if(!generatedCrazy && random.Next(crazyPersonChance) == 0)
+                return generateCrazyPerson(globalMinPosition, globalMaxPosition, 1.75f);
 
             string text = sayings[random.Next(0, sayings.Length)];
 
@@ -102,12 +114,12 @@ namespace LD28
             Texture2D headTex = Program.Game.Loader.Heads[head];
             Texture2D bodyTex = Program.Game.Loader.Bodies[body];
 
-            return coreGenerator(new Vector2(-76, -78), new Vector2(61, 78), 1.75f, headTex, bodyTex, talkDistance, health, text);
+            return coreGenerator(globalMinPosition, globalMaxPosition, 1.75f, headTex, bodyTex, talkDistance, health, text);
         }
 
         public static Person GeneratePersonWithinBounds(Vector2 posMin, Vector2 posMax, float talkDistance, float health, float height = 1.75f)
         {
-            if(!generatedCrazy && random.Next(30) == 0)
+            if(!generatedCrazy && random.Next(crazyPersonChance) == 0)
                 return generateCrazyPerson(posMin, posMax, height);
 
             string text = sayings[random.Next(0, sayings.Length)];

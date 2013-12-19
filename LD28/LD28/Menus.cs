@@ -32,6 +32,7 @@ namespace LD28
         private static GamePadQueryMenu queryMenu;
         private static EndingMenu endingMenu;
         private static EndingMenu badEndingMenu;
+        private static InstructionsMenu instructionsMenu;
 
         private static Loader loader;
 
@@ -40,12 +41,13 @@ namespace LD28
             loader = l;
             pauseMenu = new PauseMenu();
             mainMenu = new MainMenu();
-            //gameOverMenu = new EndingMenu(loader.death_end);
+            gameOverMenu = new EndingMenu(loader.death_end);
             disconnectMenu = new GamePadDCMenu();
             exitMenu = new ExitMenu();
             queryMenu = new GamePadQueryMenu();
             endingMenu = new EndingMenu(loader.good_end);
-            //badEndingMenu = new EndingMenu(loader.bad_end);
+            badEndingMenu = new EndingMenu(loader.bad_end);
+            instructionsMenu = new InstructionsMenu();
         }
 
         public static void Draw(GameTime gameTime)
@@ -94,6 +96,8 @@ namespace LD28
                     break;
                 case GameState.Menuing_Lev: badEndingMenu.Draw(gameTime);
                     break;
+                case GameState.Menuing_HiS: instructionsMenu.Draw(gameTime);
+                    break;
                 default: return;
             }
         }
@@ -127,6 +131,9 @@ namespace LD28
                     return;
                 case GameState.Menuing_Lev: 
                     badEndingMenu.Update(gameTime);
+                    break;
+                case GameState.Menuing_HiS:
+                    instructionsMenu.Update(gameTime);
                     break;
             }
         }
@@ -591,7 +598,7 @@ namespace LD28
             {
                 MenuButton quit;
                 start = new MenuButton(loader.startButton, delegate { checkedReg = false;  GameManager.State = GameState.Running; timerInMilliseconds = 0; Program.Game.Start(); });
-                instructions = new MenuButton(loader.instructionsButton, delegate { checkedReg = false;  /* todo: instructions */ });
+                instructions = new MenuButton(loader.instructionsButton, delegate { checkedReg = false; GameManager.State = GameState.Menuing_HiS; });
                 quit = new MenuButton(loader.quitButton, delegate { GameManager.State = GameState.Exiting; });
                 ending = new MenuButton(loader.endingButton, delegate { GameManager.State = (GameState)endingState; });
 
@@ -739,6 +746,36 @@ namespace LD28
                 RenderingDevice.SpriteBatch.DrawString(font, exitString, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.3f), Color.White, 0.0f, exitStringCenter, RenderingDevice.TextureScaleFactor, SpriteEffects.None, 0);
                 base.Draw(gameTime);
 
+                RenderingDevice.SpriteBatch.End();
+            }
+        }
+        #endregion
+
+        #region Instructions
+        private class InstructionsMenu : Menu
+        {
+            private Texture2D instructions_PC;
+            private Texture2D instructions_Xbox;
+
+            public InstructionsMenu()
+            {
+                instructions_PC = loader.Instructions_PC;
+                instructions_Xbox = loader.Instructions_Xbox;
+            }
+
+            public override void Update(GameTime gameTime)
+            {
+                if(Input.CheckKeyboardPress(Keys.Enter) || Input.CheckKeyboardPress(Keys.Escape) || Input.CheckXboxPress(Buttons.A) || Input.CheckXboxPress(Buttons.Start))
+                    GameManager.State = GameState.MainMenu;
+            }
+
+            public override void Draw(GameTime gameTime)
+            {
+                RenderingDevice.SpriteBatch.Begin();
+                if(Input.ControlScheme == ControlScheme.XboxController)
+                    RenderingDevice.SpriteBatch.Draw(instructions_Xbox, Vector2.Zero, Color.White);
+                else if(Input.ControlScheme == ControlScheme.Keyboard)
+                    RenderingDevice.SpriteBatch.Draw(instructions_PC, Vector2.Zero, Color.White);
                 RenderingDevice.SpriteBatch.End();
             }
         }

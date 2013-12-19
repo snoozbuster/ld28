@@ -119,6 +119,7 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
         public CharacterController(Vector3 position)
         {
             Body = new Cylinder(position, 3.5f, .75f, 10);
+            Body.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.PiOver2); // reset to Z up
             Body.IgnoreShapeChanges = true; //Wouldn't want inertia tensor recomputations to occur when crouching and such.
             Body.CollisionInformation.Shape.CollisionMargin = .1f;
             //Making the character a continuous object prevents it from flying through walls which would be pretty jarring from a player's perspective.

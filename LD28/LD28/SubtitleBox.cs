@@ -20,6 +20,7 @@ namespace LD28
         private static readonly Queue<TextBoxData> messageQueue = new Queue<TextBoxData>();
 
         private static string currentText;
+        private static TextBoxData currentData;
 
         private static readonly Vector2 symbolPos;
 
@@ -43,11 +44,11 @@ namespace LD28
             symbolPos = new Vector2(internalDrawZone.X + internalDrawZone.Width - 40, internalDrawZone.Y + internalDrawZone.Height - 40);
         }
 
-        public static void AddMessage(string text, string name = null)
+        public static void AddMessage(string text, string name = null, Action callback = null)
         {
             foreach(string str in text.Split('\n'))
             {
-                TextBoxData txt = new TextBoxData(name, str);
+                TextBoxData txt = new TextBoxData(name, str, callback);
                 if(!messageQueue.Any(v => { return v == txt; }))
                     messageQueue.Enqueue(txt);
             }
@@ -62,7 +63,7 @@ namespace LD28
                 RenderingDevice.SpriteBatch.Draw(Program.Game.Loader.EmptyTex, internalDrawZone, internalColor);
                 internalBox.Draw(currentText);
                 if(Input.ControlScheme == ControlScheme.Keyboard)
-                    SymbolWriter.WriteKeyboardIcon(Keys.Enter, symbolPos, true);
+                    SymbolWriter.WriteKeyboardIcon(Keys.E, symbolPos, true);
                 if(Input.ControlScheme == ControlScheme.XboxController)
                     SymbolWriter.WriteXboxIcon(Buttons.X, symbolPos, true);
                 RenderingDevice.SpriteBatch.End();
@@ -74,10 +75,14 @@ namespace LD28
             if(!IsShowing && messageQueue.Count > 0)
             {
                 IsShowing = true;
-                currentText = messageQueue.Dequeue().ToString();
+                currentData = messageQueue.Dequeue();
+                currentText = currentData.ToString();
             }
-            else if(IsShowing && (Input.CheckKeyboardJustPressed(Keys.Enter) || Input.CheckXboxJustPressed(Buttons.X)))
+            else if(IsShowing && (Input.CheckKeyboardJustPressed(Keys.E) || Input.CheckXboxJustPressed(Buttons.X)))
             {
+                if(currentData.Callback != null)
+                    currentData.Callback();
+
                 if(messageQueue.Count == 0)
                     IsShowing = false;
                 else
@@ -89,11 +94,13 @@ namespace LD28
         {
             public string Name;
             public string Text;
+            public Action Callback;
 
-            public TextBoxData(string name, string text)
+            public TextBoxData(string name, string text, Action callback)
             {
                 Name = name;
                 Text = text;
+                Callback = callback;
             }
 
             public override string ToString()

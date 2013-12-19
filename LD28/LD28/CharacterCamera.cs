@@ -232,7 +232,7 @@ namespace LD28
                     MoveRight(Input.CurrentPad.ThumbSticks.Left.X * distance);
                     if(Input.CurrentPad.IsButtonDown(Buttons.A))
                         MoveUp(distance);
-                    if(Input.CurrentPad.IsButtonDown(Buttons.RightStick))
+                    if(Input.CurrentPad.IsButtonDown(Buttons.LeftTrigger))
                         MoveUp(-distance);
                 }
                 else if(Input.ControlScheme == ControlScheme.Keyboard)

@@ -17,16 +17,17 @@ using BEPUphysics.NarrowPhaseSystems.Pairs;
 using BEPUphysics.Collidables;
 using BEPUphysics.MathExtensions;
 using BEPUphysicsDemos.SampleCode;
+using Microsoft.Xna.Framework.Graphics;
 
 namespace LD28
 {
     public class Player : Actor
     {
         protected CharacterControllerInput character;
-        protected Dictionary<Actor, Dictionary<string, object>> progressionData = new Dictionary<Actor, Dictionary<string, object>>();
+        protected Dictionary<string, object> progressionData = new Dictionary<string, object>();
 
         public float Morality { get; private set; }
-        protected float experience = 0;
+        protected float experience = 1;
 
         protected BaseModel sword;
         protected bool swinging;
@@ -35,6 +36,10 @@ namespace LD28
         protected float timing = 0;
         protected float baseDamage = 0.4f;
 
+        protected bool fading;
+        protected const int deltaA = 3;
+        protected int alpha;
+
         protected MotorizedGrabSpring swordgrabber;
 
         public Player()
@@ -42,7 +47,6 @@ namespace LD28
         {
             character = new CharacterControllerInput(GameManager.Space, RenderingDevice.Camera as CharacterCamera, new Vector3(-1, -16, 5));
             character.CharacterController.Body.Tag = this;
-            character.CharacterController.Body.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, MathHelper.PiOver2);
             PhysicsObject = character.CharacterController.Body; // for posterity
             PhysicsObject.CollisionInformation.CollisionRules.Group = dynamicObjects; // also for posterity
 
@@ -57,8 +61,18 @@ namespace LD28
             sword.Ent.CollisionInformation.Events.PairTouching += onCollision;
         }
 
-        // eventually these will deal with drawing the sword
-        public override void Draw() { }
+        public override void Draw() 
+        {
+            RenderingDevice.SpriteBatch.Begin(SpriteSortMode.Immediate, BlendState.AlphaBlend);
+            RenderingDevice.GraphicsDevice.SamplerStates[0] = SamplerState.PointWrap;
+            float scale = 5;
+            RenderingDevice.SpriteBatch.Draw(Program.Game.Loader.HealthBarChrome, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.9f), null, Color.White, 0, new Vector2(Program.Game.Loader.HealthBarFill.Width, Program.Game.Loader.HealthBarFill.Height) * 0.5f, scale, SpriteEffects.None, 0);
+            RenderingDevice.SpriteBatch.Draw(Program.Game.Loader.HealthBarFill, new Vector2(RenderingDevice.Width * 0.5f, RenderingDevice.Height * 0.9f), new Rectangle(0, 0, (int)(Program.Game.Loader.HealthBarFill.Width * (Health / MaxHealth)), Program.Game.Loader.HealthBarFill.Height), Color.White, 0, new Vector2(Program.Game.Loader.HealthBarFill.Width, Program.Game.Loader.HealthBarFill.Height) * 0.5f, scale, SpriteEffects.None, 0);
+            if(fading)
+                RenderingDevice.SpriteBatch.Draw(Program.Game.Loader.EmptyTex, new Rectangle(0, 0, (int)RenderingDevice.Width, (int)RenderingDevice.Height),
+                    new Color(255, 0, 0, alpha) * (alpha / 255f));
+            RenderingDevice.SpriteBatch.End();
+        }
         public override void AddToRenderer() 
         {
             RenderingDevice.Add(sword);
@@ -70,6 +84,16 @@ namespace LD28
 
         public override void Update(GameTime gameTime)
         {
+            if(fading)
+            {
+                alpha += deltaA;
+                if(alpha >= 255)
+                {
+                    alpha = 255;
+                    GameManager.State = GameState.GameOver;
+                }
+                return;
+            }
             if(character.IsActive)
             {
                 character.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
@@ -112,31 +136,39 @@ namespace LD28
                 //    newWorld *= Matrix.CreateTranslation(RenderingDevice.Camera.Position);
                 //    sword.Transform = newWorld;
                 //}
+                if(Vector3.Distance(sword.Ent.Position, PhysicsObject.Position) > 6)
+                    sword.Ent.Position = swordgrabber.GoalPosition;
                 swordgrabber.GoalPosition = RenderingDevice.Camera.Position + RenderingDevice.Camera.World.Forward * 2 - Vector3.UnitZ;
                 swordgrabber.GoalOrientation = Quaternion.CreateFromAxisAngle(Vector3.UnitX, -MathHelper.PiOver2) *
                     Quaternion.CreateFromYawPitchRoll(-(RenderingDevice.Camera as CharacterCamera).Yaw, 0, 0) *
                     Quaternion.CreateFromYawPitchRoll(0, -((RenderingDevice.Camera as CharacterCamera).Pitch + MathHelper.PiOver2), 0) * swingQuat;
 
 #if DEBUG
-                if(Input.CheckKeyboardJustPressed(Keys.E))
+                if(Input.CheckKeyboardJustPressed(Keys.Q))
                     GameManager.State = GameState.Ending;
 #endif
             }
         }
 
-        public void UpdateProgressionData(Actor boundActor, string dataName, object value)
+        public void UpdateProgressionData(string dataName, object value)
         {
-            if(!progressionData.ContainsKey(boundActor))
-                progressionData.Add(boundActor, new Dictionary<string, object>());
-            progressionData[boundActor].Add(dataName, value);
+            if(!progressionData.ContainsKey(dataName))
+                progressionData.Add(dataName, value);
+            else
+                progressionData[dataName] = value;
         }
 
-        public object GetProgressionData(Actor boundActor, string dataName)
+        public object GetProgressionData(string dataName)
         {
-            if(!progressionData.ContainsKey(boundActor) || !progressionData[boundActor].ContainsKey(dataName))
+            if(!progressionData.ContainsKey(dataName))
                 return null;
 
-            return progressionData[boundActor][dataName];
+            return progressionData[dataName];
+        }
+
+        public bool HasProgressionData(string dataName)
+        {
+            return progressionData.ContainsKey(dataName);
         }
 
         public void GiveExperience(float experience)
@@ -153,13 +185,11 @@ namespace LD28
         public override void OnAdditionToSpace(BEPUphysics.ISpace newSpace)
         {
             newSpace.Add(sword.Ent);
-            //newSpace.Add(swordJoint);
             newSpace.Add(swordgrabber);
         }
 
         public override void OnRemovalFromSpace(BEPUphysics.ISpace oldSpace)
         {
-            //oldSpace.Remove(swordJoint);
             oldSpace.Remove(sword.Ent);
             oldSpace.Remove(swordgrabber);
         }
@@ -171,7 +201,7 @@ namespace LD28
             Actor actor;
             if(other is ConvexCollidable && (actor = (other as ConvexCollidable).Entity.Tag as Actor) != null)
             {
-                actor.Damage(MathHelper.Clamp(swordgrabber.AngularVelocityMagnitude * baseDamage, 1, 9), this);
+                actor.Damage(MathHelper.Clamp(swordgrabber.AngularVelocityMagnitude * baseDamage * experience, 1, 9), this);
                 hitThisSwing = true;
             }
         }
@@ -179,7 +209,7 @@ namespace LD28
         protected override void onDeath(Actor killer)
         {
             base.onDeath(killer);
-            GameManager.State = GameState.GameOver;
+            fading = true;
         }
 
         public void Activate()

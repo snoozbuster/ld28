@@ -17,20 +17,24 @@ namespace LD28
         public override void Heal(float amount) { } // do nothing
         public override void Damage(float amount, Actor attacker) { } // do nothing
 
-        public override void Update(GameTime gameTime) { } // do nothing
-
         protected override void onDeath(Actor killer) { } // do nothing
         public override void Draw() { } // do nothing
 
         protected Door[] doors;
-        protected BuildingInterior interior;
 
-        public Building(BaseModel model, Door[] doors = null, BuildingInterior interior = null)
+        public Building(BaseModel model, Door[] doors = null)
             : base(model.Ent, new ModelDrawingObject(model), float.PositiveInfinity)
         {
             PhysicsObject.CollisionInformation.CollisionRules.Group = staticObjects;
             this.doors = doors;
-            this.interior = interior;
+            if(doors == null)
+                this.doors = new Door[] { };
+        }
+
+        public override void Update(GameTime gameTime)
+        {
+            foreach(Door d in doors)
+                d.Update(gameTime);
         }
 
         public List<Actor> GetActors()
@@ -39,12 +43,35 @@ namespace LD28
                 return new List<Actor>();
 
             List<Actor> output = new List<Actor>(doors);
-            if(interior != null)
-            {
-                output.AddRange(interior.GetActors());
-                output.Add(interior);
-            }
             return output;
+        }
+
+        public override void OnAdditionToSpace(BEPUphysics.ISpace newSpace)
+        {
+            base.OnAdditionToSpace(newSpace);
+            foreach(Door d in doors)
+                newSpace.Add(d);
+        }
+
+        public override void OnRemovalFromSpace(BEPUphysics.ISpace oldSpace)
+        {
+            base.OnRemovalFromSpace(oldSpace);
+            foreach(Door d in doors)
+                oldSpace.Remove(d);
+        }
+
+        public override void AddToRenderer()
+        {
+            base.AddToRenderer();
+            foreach(Door d in doors)
+                RenderingDevice.Add(d);
+        }
+
+        public override void RemoveFromRenderer()
+        {
+            base.RemoveFromRenderer();
+            foreach(Door d in doors)
+                RenderingDevice.Remove(d);
         }
     }
 }

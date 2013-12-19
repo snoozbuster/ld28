@@ -88,13 +88,15 @@
   <ItemGroup>
     <Compile Include="Actors\Actor.cs" />
     <Compile Include="Actors\Buildings\Building.cs" />
-    <Compile Include="Actors\Buildings\BuildingInterior.cs" />
     <Compile Include="Actors\Buildings\Door.cs" />
+    <Compile Include="Actors\Entities\August.cs" />
+    <Compile Include="Actors\Entities\Evidence.cs" />
+    <Compile Include="Actors\Entities\Laser.cs" />
     <Compile Include="Actors\Entities\Player.cs" />
     <Compile Include="Actors\Entities\Robot.cs" />
     <Compile Include="Actors\BillboardDrawingObject.cs" />
-    <Compile Include="Actors\Environment\Nature.cs" />
-    <Compile Include="MotorizedGrabSpring.cs" />
+    <Compile Include="Actors\Entities\Nature.cs" />
+    <Compile Include="CharacterController\MotorizedGrabSpring.cs" />
     <Compile Include="CharacterCamera.cs" />
     <Compile Include="CharacterController\CharacterController.cs" />
     <Compile Include="CharacterController\CharacterControllerInput.cs" />
