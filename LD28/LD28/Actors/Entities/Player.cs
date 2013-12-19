@@ -47,6 +47,8 @@ namespace LD28
         {
             character = new CharacterControllerInput(GameManager.Space, RenderingDevice.Camera as CharacterCamera, new Vector3(-1, -16, 5));
             character.CharacterController.Body.Tag = this;
+            character.CharacterController.HorizontalMotionConstraint.Speed = 10;
+            character.CharacterController.HorizontalMotionConstraint.CrouchingSpeed = 5;
             PhysicsObject = character.CharacterController.Body; // for posterity
             PhysicsObject.CollisionInformation.CollisionRules.Group = dynamicObjects; // also for posterity
 
@@ -113,7 +115,7 @@ namespace LD28
                 }
                 
                 timing += (float)gameTime.ElapsedGameTime.TotalSeconds;
-                if(!swinging && timing > 0.5f && Input.MouseState.LeftButton == ButtonState.Pressed)
+                if(!swinging && timing > 0.5f && (Input.MouseState.LeftButton == ButtonState.Pressed || Input.CurrentPad.IsButtonDown(Buttons.RightTrigger)))
                 { 
                     swinging = true; 
                     timing = 0;

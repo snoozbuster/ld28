@@ -150,8 +150,8 @@ namespace LD28
                         RenderingDevice.Update(gameTime);
 
                         Player.Update(gameTime);
-                        august.Update(gameTime);
                         SubtitleBox.Update();
+                        august.Update(gameTime);
                         foreach(Actor a in actorList)
                             a.Update(gameTime);
 
@@ -611,39 +611,39 @@ namespace LD28
         protected List<Actor> getRocks()
         {
             List<Vector3> temp = new List<Vector3>();
-            temp.Add(new Vector3(62, -12, 1));
-            temp.Add(new Vector3(75, 16, 1));
-            temp.Add(new Vector3(76, 43, 1));
-            temp.Add(new Vector3(76, 64, 1));
-            temp.Add(new Vector3(63, 98, 1));
-            temp.Add(new Vector3(76, 108, 1));
-            temp.Add(new Vector3(85, 131, 1));
-            temp.Add(new Vector3(75, 142, 1));
-            temp.Add(new Vector3(48, 135, 1));
-            temp.Add(new Vector3(25, 135, 1));
-            temp.Add(new Vector3(-8, 105, 1));
-            temp.Add(new Vector3(6, 80, 1));
-            temp.Add(new Vector3(29, 116, 1));
-            temp.Add(new Vector3(34, 62, 1));
-            temp.Add(new Vector3(-13, 48, 1));
-            temp.Add(new Vector3(55, 19, 1));
-            temp.Add(new Vector3(90, 6, 1));
-            temp.Add(new Vector3(126, -21, 1));
-            temp.Add(new Vector3(110, -8, 1));
-            temp.Add(new Vector3(111, -31, 1));
-            temp.Add(new Vector3(88, -24, 1));
-            temp.Add(new Vector3(53, -22, 1));
-            temp.Add(new Vector3(9, -6, 1));
-            temp.Add(new Vector3(27, -16, 1));
-            temp.Add(new Vector3(0, -25, 1));
-            temp.Add(new Vector3(-10, -23, 1));
-            temp.Add(new Vector3(-32, -12, 1));
-            temp.Add(new Vector3(-29, -4, 1));
-            temp.Add(new Vector3(13, 19, 1));
-            temp.Add(new Vector3(26, 10, 1)); 
+            temp.Add(new Vector3(62, -12, 0.5f));
+            temp.Add(new Vector3(75, 16, 0.5f));
+            temp.Add(new Vector3(76, 43, 0.5f));
+            temp.Add(new Vector3(76, 64, 0.5f));
+            temp.Add(new Vector3(63, 98, 0.5f));
+            temp.Add(new Vector3(76, 108, 0.5f));
+            temp.Add(new Vector3(85, 131, 0.5f));
+            temp.Add(new Vector3(75, 142, 0.5f));
+            temp.Add(new Vector3(48, 135, 0.5f));
+            temp.Add(new Vector3(25, 135, 0.5f));
+            temp.Add(new Vector3(-8, 105, 0.5f));
+            temp.Add(new Vector3(6, 80, 0.5f));
+            temp.Add(new Vector3(29, 116, 0.5f));
+            temp.Add(new Vector3(34, 62, 0.5f));
+            temp.Add(new Vector3(-13, 48, 0.5f));
+            temp.Add(new Vector3(55, 19, 0.5f));
+            temp.Add(new Vector3(90, 6, 0.5f));
+            temp.Add(new Vector3(126, -21, 0.5f));
+            temp.Add(new Vector3(110, -8, 0.5f));
+            temp.Add(new Vector3(111, -31, 0.5f));
+            temp.Add(new Vector3(88, -24, 0.5f));
+            temp.Add(new Vector3(53, -22, 0.5f));
+            temp.Add(new Vector3(9, -6, 0.5f));
+            temp.Add(new Vector3(27, -16, 0.5f));
+            temp.Add(new Vector3(0, -25, 0.5f));
+            temp.Add(new Vector3(-10, -23, 0.5f));
+            temp.Add(new Vector3(-32, -12, 0.5f));
+            temp.Add(new Vector3(-29, -4, 0.5f));
+            temp.Add(new Vector3(13, 19, 0.5f));
+            temp.Add(new Vector3(26, 10, 0.5f)); 
             List<Actor> trees = new List<Actor>();
             foreach(Vector3 v in temp)
-                trees.Add(new Nature(v, Loader.RockTexture, new Vector2(2, 2), 5));
+                trees.Add(new Nature(v, Loader.RockTexture, new Vector2(2, 1f), 5));
 
             return trees;
         }
@@ -845,8 +845,8 @@ namespace LD28
             }
             GameManager.Space.Add(Player);
             RenderingDevice.Add(Player);
-            Player.Activate();
             RenderingDevice.Camera.Reset();
+            Player.Activate();
         }
 
         public void End()
@@ -858,7 +858,8 @@ namespace LD28
             }
             GameManager.Space.Remove(Player);
             RenderingDevice.Remove(Player);
-            GameManager.Space.Remove(august);
+            if(august.Space != null)
+                GameManager.Space.Remove(august);
             RenderingDevice.Remove(august);
             actorList.Clear();
             Player.Deactivate();

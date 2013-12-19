@@ -197,7 +197,7 @@ namespace LD28
             {
                 // todo: why was this originally done raw? relic?
                 Yaw += Input.CurrentPad.ThumbSticks.Right.X * -1.5f * dt;
-                Pitch += Input.CurrentPad.ThumbSticks.Right.Y * 1.5f * dt;
+                Pitch -= Input.CurrentPad.ThumbSticks.Right.Y * 1.5f * dt;
             }
 
             World = Matrix.CreateFromAxisAngle(-Vector3.UnitX, Pitch) * Matrix.CreateFromAxisAngle(Vector3.UnitZ, Yaw);
@@ -262,8 +262,7 @@ namespace LD28
         }
 
         public void Reset() 
-        {
-            
+        {  
             Mouse.SetPosition(RenderingDevice.GraphicsDevice.Viewport.Width / 2, RenderingDevice.GraphicsDevice.Viewport.Height / 2);
             Input.Update(new GameTime(), false); // force an update to update mouse
             Position = new Vector3(-1, -16, 6);

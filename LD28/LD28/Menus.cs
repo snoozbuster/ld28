@@ -521,7 +521,7 @@ namespace LD28
                 selectedControl = resume;
                 selectedControl.IsSelected = null;
 
-                menu = new ConfirmationMenu("Are you sure you want to return to the main menu?\n                    All progress will be lost.",
+                menu = new ConfirmationMenu("Are you sure you want to return to the main menu?\n                                  All progress will be lost.",
                     delegate { Program.Game.BGM.Volume = 0.5f; GameManager.State = GameState.MainMenu; Program.Game.End(); });
             }
 
@@ -609,6 +609,7 @@ namespace LD28
                 controlArray.AddRange(new MenuControl[] { instructions, start, quit });
 
                 selectedControl = start;
+                selectedControl.IsSelected = null;
             }
 
             public override void Draw(GameTime gameTime)
@@ -765,7 +766,8 @@ namespace LD28
 
             public override void Update(GameTime gameTime)
             {
-                if(Input.CheckKeyboardPress(Keys.Enter) || Input.CheckKeyboardPress(Keys.Escape) || Input.CheckXboxPress(Buttons.A) || Input.CheckXboxPress(Buttons.Start))
+                if(Input.CheckKeyboardPress(Keys.Enter) || Input.CheckKeyboardPress(Keys.Escape) || Input.CheckXboxPress(Buttons.A) || Input.CheckXboxPress(Buttons.Start)
+                    || Input.CheckMouseJustClicked(Program.Game.IsActive))
                     GameManager.State = GameState.MainMenu;
             }
 

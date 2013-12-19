@@ -31,6 +31,7 @@ namespace LD28
             r1 = new Robot(new Accelerated_Delivery_Win.BaseModel(delegate { return Program.Game.Loader.RobotModel; }, false, null, new Vector3(71.5f, 3.5f, 2)), 10, 10, 3, 7);
             r2 = new Robot(new Accelerated_Delivery_Win.BaseModel(delegate { return Program.Game.Loader.RobotModel; }, false, null, new Vector3(66.5f, 3.5f, 2)), 10, 10, 3, 7);
             r1.CanSeek = r2.CanSeek = false;
+            r1.PhysicsObject.Orientation = r2.PhysicsObject.Orientation = Quaternion.CreateFromAxisAngle(Vector3.UnitZ, MathHelper.Pi);
             r1.PhysicsObject.CollisionInformation.Events.InitialCollisionDetected += onRobotDamaged;
             r2.PhysicsObject.CollisionInformation.Events.InitialCollisionDetected += onRobotDamaged;
         }

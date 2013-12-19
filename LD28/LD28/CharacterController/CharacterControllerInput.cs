@@ -216,35 +216,41 @@ namespace BEPUphysicsDemos.AlternateMovement.Character
 
                 Vector3 movementDir;
 
-                if (Input.KeyboardState.IsKeyDown(Keys.W))
+                if(Input.ControlScheme == ControlScheme.Keyboard)
                 {
-                    movementDir = Camera.World.Forward;
-                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
+                    if(Input.KeyboardState.IsKeyDown(Keys.W))
+                    {
+                        movementDir = Camera.World.Forward;
+                        totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
+                    }
+                    if(Input.KeyboardState.IsKeyDown(Keys.S))
+                    {
+                        movementDir = Camera.World.Forward;
+                        totalMovement -= Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
+                    }
+                    if(Input.KeyboardState.IsKeyDown(Keys.A))
+                    {
+                        movementDir = Camera.World.Left;
+                        totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
+                    }
+                    if(Input.KeyboardState.IsKeyDown(Keys.D))
+                    {
+                        movementDir = Camera.World.Right;
+                        totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
+                    }
                 }
-                if(Input.KeyboardState.IsKeyDown(Keys.S))
-                {
-                    movementDir = Camera.World.Forward;
-                    totalMovement -= Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
-                }
-                if(Input.KeyboardState.IsKeyDown(Keys.A))
-                {
-                    movementDir = Camera.World.Left;
-                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
-                }
-                if(Input.KeyboardState.IsKeyDown(Keys.D))
-                {
-                    movementDir = Camera.World.Right;
-                    totalMovement += Vector2.Normalize(new Vector2(movementDir.X, movementDir.Y));
-                }
+                else if(Input.ControlScheme == ControlScheme.XboxController)
+                    totalMovement += Vector2.Transform(Input.CurrentPad.ThumbSticks.Left, Quaternion.CreateFromAxisAngle(Vector3.UnitZ, Camera.Yaw));
+
                 if (totalMovement == Vector2.Zero)
                     CharacterController.HorizontalMotionConstraint.MovementDirection = Vector2.Zero;
                 else
                     CharacterController.HorizontalMotionConstraint.MovementDirection = Vector2.Normalize(totalMovement);
 
-                CharacterController.StanceManager.DesiredStance = Input.KeyboardState.IsKeyDown(Keys.LeftShift) ? Stance.Crouching : Stance.Standing;
+                CharacterController.StanceManager.DesiredStance = Input.KeyboardState.IsKeyDown(Keys.LeftShift) || Input.CurrentPad.IsButtonDown(Buttons.LeftTrigger) ? Stance.Crouching : Stance.Standing;
 
                 //Jumping
-                if (Input.CheckKeyboardJustPressed(Keys.Space))
+                if (Input.CheckKeyboardJustPressed(Keys.Space) || Input.CurrentPad.IsButtonDown(Buttons.A))
                     CharacterController.Jump();
 
                 // rotate

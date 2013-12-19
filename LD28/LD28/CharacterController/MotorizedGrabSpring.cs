@@ -136,7 +136,7 @@ namespace BEPUphysicsDemos.SampleCode
             //For this example, the motors will be just be the nearly rigid default.
             linearMotor.Settings.Servo.SpringSettings.StiffnessConstant = 60000 * e.Mass;
             linearMotor.Settings.Servo.SpringSettings.DampingConstant = 9000 * e.Mass;
-            linearMotor.Settings.Servo.BaseCorrectiveSpeed = 1;
+            linearMotor.Settings.Servo.BaseCorrectiveSpeed = 2;
 
             //angularMotor.Settings.VelocityMotor.Softness = 1 / (9000 * e.Mass);
             //An unlimited motor will gladly push the entity through other objects.
