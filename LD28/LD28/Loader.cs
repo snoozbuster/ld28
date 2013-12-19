@@ -77,11 +77,11 @@ namespace LD28
         public Model Skydome;
         public Model SkyscraperModel;
         
-        public Model PoliceModel;
         public Model HouseModel;
         public Model DoorModel;
         public Model ApartmentModel;
         public Model WarehouseModel;
+        public Model BoardModel;
         
         public Model SwordModel;
         public Model LaserModel;
@@ -95,7 +95,7 @@ namespace LD28
 
         public IEnumerator<float> GetEnumerator()
         {
-            totalItems = 2 + 29 + 12 + 2 + 3;
+            totalItems = 2 + 29 + 13 + 2 + 3;
 
             #region Shaders
             BillboardEffect = content.Load<Effect>("shaders/bbEffect");
@@ -182,11 +182,11 @@ namespace LD28
             yield return progress();
             ApartmentModel = content.Load<Model>("models/apartments");
             yield return progress();
-            PoliceModel = content.Load<Model>("models/police");
-            yield return progress();
             DoorModel = content.Load<Model>("models/door");
             yield return progress();
             WarehouseModel = content.Load<Model>("models/warehouse");
+            yield return progress();
+            BoardModel = content.Load<Model>("models/board");
             yield return progress();
 
             SwordModel = content.Load<Model>("models/sword");

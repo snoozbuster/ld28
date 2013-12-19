@@ -509,7 +509,7 @@ namespace LD28
             {
                 MenuButton mainMenu, quit;
 
-                resume = new MenuButton(loader.resumeButton, delegate { MediaSystem.PlaySoundEffect(SFXOptions.Pause); GameManager.State = GameState.Running; });
+                resume = new MenuButton(loader.resumeButton, delegate { MediaSystem.PlaySoundEffect(SFXOptions.Pause); GameManager.State = GameState.Running; Program.Game.BGM.Volume = 1; });
                 mainMenu = new MenuButton(loader.mainMenuButton, delegate { menu.Reset(); confirming = true; });
                 quit = new MenuButton(loader.pauseQuitButton, delegate { GameManager.State = GameState.Exiting; });
 
